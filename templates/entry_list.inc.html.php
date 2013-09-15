@@ -22,11 +22,11 @@
                                     <? if (!$entry->is_active) { ?>
                                         <div class="notice">HIDDEN</div>
                                     <? } ?>
-                                    <a href="./?action=edit&entry=<?= $entry->id ?>">edit</a>
+                                    <a href="./?action=entry_edit&id=<?= $entry->id ?>">edit</a>
                                 </li>
 
                                 <li>
-                                    <a href="./?action=delete&entry=<?= $entry->id ?>">delete</a>
+                                    <a href="./?action=entry_delete&id=<?= $entry->id ?>">delete</a>
                                 </li>
 
                             </ul>

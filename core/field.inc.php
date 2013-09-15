@@ -47,6 +47,9 @@
                 case 'BoolField':
                     return $this->value ? 1 : 0;
                     break;
+                case 'AutoIncrementField':
+                    return $this->value ? $this->value : 'null';
+                    break;
                 default:
                     return $this->value;
             }
@@ -71,6 +74,21 @@
 
     class NumberField extends Field {
         protected $default_value = 0;
+    }
+
+    class AutoIncrementField extends NumberField {
+        protected $default_value = null;
+        protected $editable = false;
+    }
+
+    class ForeignKey extends Field {
+        protected $model;
+
+        public function __toString() {
+            $class_name = $this->model;
+            $object = $class_name::get($this->value);
+            return (string)$object->name;
+        }
     }
 
     // @todo: choices

@@ -21,9 +21,10 @@
             'TextField' => 'textarea',
             'StringField' => 'text',
             'NumberField' => 'number',
+            'AutoIncrementField' => 'number',
             'DateTimeField' => 'text',
             'BoolField' => 'checkbox',
-            // @todo: radiobuttons, selects
+            'ForeignKey' => 'text' // @todo: must be select
         ];
 
         function __construct($object) {

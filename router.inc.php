@@ -8,7 +8,7 @@
         }
 
         private function execute() {
-            echo 'router->execute();';
+//            echo 'router->execute();';
             $request = new Request();
             $action = $request->query->get('action');
             $response = new MyResponse($request);
@@ -26,6 +26,9 @@
                     $response->object_edit('Entry', $id);
                     break;
 
+                case 'user_new':
+                    $response->object_edit('User');
+                    break;
                 case 'user_edit':
                     $id = $request->query->get('id');
                     $response->object_edit('User', $id);

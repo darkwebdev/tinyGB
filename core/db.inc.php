@@ -12,17 +12,17 @@
         }
 
         private function execute() {
-            echo 'SQL: '. $this->query_text .'<br>';
+//            echo 'SQL: '. $this->query_text .'<br>';
             try {
                 $dbh = new PDO('mysql:host='. Config::DB_HOST .';dbname='. Config::DB_NAME, Config::DB_USER, Config::DB_PASS, array(PDO::ATTR_PERSISTENT => false));
                 $stmt = $dbh->prepare($this->query_text);
                 $result = $stmt->execute();
-                echo 'db exec result: <b>'. $stmt->errorInfo()[2] .'</b><br>';
+//                echo 'db exec result: <b>'. $stmt->errorInfo()[2] .'</b><br>';
                 if (!$result) return false;
 
                 $this->data = $stmt->fetchAll();
-                echo 'db data returned: ';
-                var_dump($this->data);
+//                echo 'db data returned: ';
+//                var_dump($this->data);
                 if (!$this->data) return false;
             } catch (PDOException $e) {
                 print "<h2>Error!: " . $e->getMessage() . "</h2>";
@@ -32,8 +32,18 @@
             return true;
         }
 
-        public function get_all() {
-            $this->query_text = 'SELECT * FROM '. $this->table;
+        public function get_all($filter_data) {
+            $filter_query = '';
+            if (count($filter_data)) {
+                $filter_query = ' WHERE ';
+                $filter_list = [];
+                foreach($filter_data as $field => $value) {
+                    $filter_list[] = $field .'='. $value;
+                }
+                $filter_query .= join(', ', $filter_list);
+            }
+            $this->query_text = 'SELECT * FROM '. $this->table . $filter_query;
+
             if ($this->execute()) return $this->data;
             else return null;
         }
@@ -46,8 +56,8 @@
 
         public function save($id, $data) {
             //insert into table (id, name, age) values(1, "A", 19) on duplicate key update name=values(name), age=values(age)
-            var_dump($data);
             foreach ($data as $field => $value) {
+//                var_dump($value);
                 $fields[] = $field;
                 $values[] = $value->get_db_value();
 //                $values[] = $value->value;

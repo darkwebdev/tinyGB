@@ -10,8 +10,7 @@
         public $is_active;
 
         function __construct($vars=[]) {
-            $this->id = new NumberField();
-            $this->id->editable = false;
+            $this->id = new AutoIncrementField();
 
             $this->name = new StringField();
 
@@ -23,9 +22,6 @@
         }
 
         public function apply_data($data) {
-//            echo 'apply: ';
-//            var_dump($this);
-//            var_dump($data);
 //            var_dump(xdebug_get_function_stack());
             foreach ($data as $field => $value) {
 //                echo 'field: '. $field;
@@ -34,6 +30,7 @@
                 }
 //                var_dump($this->{$field});
             }
+//            var_dump($this);
         }
 
         private static function create_object($data) {
@@ -50,9 +47,9 @@
             return $value;
         }
 
-        static function get_all() {
+        static function get_all($filter=[]) {
             $query = new Query(get_called_class());
-            $data = $query->get_all();
+            $data = $query->get_all($filter);
 
             if ($data) {
                 $objects = [];
@@ -68,8 +65,8 @@
         static function get($id) {
             $query = new Query(get_called_class());
             $data = $query->get($id);
-            echo 'get: ';
-            var_dump($data);
+//            echo 'get: ';
+//            var_dump($data);
 
             return self::create_object($data);
         }
@@ -77,12 +74,20 @@
         public function save() {
             $query = new Query(get_called_class());
             if ($query->save($this->id, get_object_vars($this))) {
-                echo 'db returned success<br>';
+//                echo 'db returned success<br>';
                 return true;
             } else {
-                echo 'db returned failure<br>';
+//                echo 'db returned failure<br>';
                 return false;
             }
+        }
+
+        public function as_array() {
+            $object_array = [];
+            foreach (get_object_vars($this) as $field => $value) {
+                $object_array[$field] = $value->value;
+            }
+            return $object_array;
         }
 
     }
@@ -92,11 +97,13 @@
         public $is_admin;
 
         public function __construct($data=[]) {
-            echo 'construct data: ';
-            var_dump($data);
+//            echo 'construct data: ';
+//            var_dump($data);
             parent::__construct();
+
             $this->name->editable = false;
             $this->pass = new StringField('Password'); // @todo: change to password_field type
+
             $this->is_admin = new BoolField('Administrator rights');
             $this->is_admin->editable = false;
 
@@ -108,14 +115,23 @@
 
     class Entry extends Model {
         public $text;
+        public $author;
 
         public function __construct($data=[]) {
             parent::__construct();
+
             $this->text = new TextField('Content');
+
+            $this->author = new ForeignKey();
+            $this->author->model = 'User';
 
             $this->apply_data($data);
         }
-    }
 
+        static public function get_active() {
+            return self::get_all(['is_active' => true]);
+        }
+
+    }
 
 ?>

@@ -1,0 +1,39 @@
+<ul class="entries">
+    {{#each entry_list}}
+        {{#if is_active || user.is_admin}}
+            <li>
+                <article>
+                    <header>
+                        <div class="author">{{author}}</div>
+                        <div class="title">{{name}}</div>
+                        <div class="time">{{created}}</div>
+                    </header>
+
+                    <section>
+                        {{text}}
+                    </section>
+
+                    {{#if user.is_admin}}
+                        <footer>
+                            <ul>
+
+                                <li>
+                                    {{#if entry.is_active}}
+                                        <div class="notice">HIDDEN</div>
+                                    {{/if}}
+                                    <a href="./?action=entry_edit&id={{id}}">edit</a>
+                                </li>
+
+                                <li>
+                                    <a href="./?action=entry_delete&id={{id}}">delete</a>
+                                </li>
+
+                            </ul>
+                        </footer>
+                    {{/if}}
+
+                </article>
+            </li>
+        {{/if}}
+    {{/each}}
+</ul>

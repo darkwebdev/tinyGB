@@ -8,7 +8,7 @@
         public function common_context() {
             parent::common_context();
 
-            if ($this->context['user']->is_admin) {
+            if ($this->request->user->is_admin) {
                 $user_list = User::get_all();
                 $this->context['user_list'] = $user_list;
             }
@@ -44,7 +44,11 @@
         }
 
         public function entry_list() {
-            $entry_list = Entry::get_all();
+            if ($this->request->user->is_admin) {
+                $entry_list = Entry::get_all();
+            } else {
+                $entry_list = Entry::get_active();
+            }
 
             $this->context = [
                 'html_title' => 'Entry listing',

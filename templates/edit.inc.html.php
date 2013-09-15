@@ -3,7 +3,6 @@
         <? foreach ($form->fields as $field) { ?>
             <? if ($field->editable || $user->is_admin) { ?>
                 <li>
-                    <?var_dump($field);?>
 
                     <span class="label">
                         <?= $field->label ?>:
@@ -21,7 +20,9 @@
                                 <? if ($field->type == 'checkbox') { ?>
                                     <? if ($field->value) { ?>checked<? } ?>
                                 <? } else { ?>
-                                    value="<?= $field->value ?>"
+                                    <? if ($field->value) { ?>
+                                        value="<?= $field->value ?>"
+                                    <? } ?>
                                 <? } ?>
                                 >
                         <? } ?>

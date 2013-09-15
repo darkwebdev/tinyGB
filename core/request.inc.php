@@ -14,13 +14,12 @@
 
         function __construct() {
             $this->server = new Dict($_SERVER);
-            $this->get = new Dict($_GET);
-            $this->post = new Dict($_POST); // @todo: sanitate user input
+            $this->get = new Dict(sanitize($_GET));
+            $this->post = new Dict(sanitize($_POST));
             $this->cookie = new Dict($_COOKIE);
             $this->method = $_SERVER['REQUEST_METHOD'];
-            //print_r($this->server);
-            $this->query = new Dict($this->server->get('QUERY_STRING'));
-            //urldecode()
+            $this->is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
+            $this->query = new Dict(sanitize($this->server->get('QUERY_STRING')));
 
             $this->extract_user();
         }

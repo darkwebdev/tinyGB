@@ -1,0 +1,37 @@
+<form method="POST">
+    <ul>
+        {% for field in form.fields %}
+            {% if field.editable or user.is_admin %}
+                <li>
+
+                    <span class="label">
+                        {{ field.label }}:
+                    </span>
+
+                    <span class="input">
+                        {% if field.type == 'textarea' %}
+                            <textarea name="{{ field.name }}">
+                                {{ field.value }}
+                            </textarea>
+                        {% else %}
+                            <input
+                                type="{{ field.type }}"
+                                name="{{ field.name }}"
+                                {% if field.type == 'checkbox' %}
+                                    {% if field.value %}checked{% endif %}
+                                {% else %}
+                                    value="{{ field.value }}"
+                                {% endif %}
+                            >
+                        {% endif %}
+                    </span>
+
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        <li>
+            <input type="submit" value="Save">
+        </li>
+    </ul>
+</form>

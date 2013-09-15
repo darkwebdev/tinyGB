@@ -11,9 +11,17 @@
 
         public function render() {
             $this->common_context();
-            $template = new Template($this->context);
-            $template->prefix = $this->context['template'];
-            print $template->get_html();
+            if ($this->request->is_ajax) {
+                unset($this->context['template']);
+                print json_serialize($this->context);
+//                print json_encode($this->context);
+            } else {
+                if (array_key_exists('template', $this->context)) {
+                    $template = new Template($this->context);
+                    $template->prefix = $this->context['template'];
+                    print $template->get_html();
+                }
+            }
         }
 
         public function common_context() {
@@ -28,4 +36,5 @@
             ];
         }
     }
+
 ?>

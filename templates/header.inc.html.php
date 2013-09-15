@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Tiny GuestBook<?= " &ndash; ". $html_title ?></title>
-	</head>
-	<body>
+    <head>
+        <title>Tiny GuestBook<?= " &ndash; ". $html_title ?></title>
+        <script src="/static/js/nunjucks-min.js"></script>
+        <script src="/static/js/templates.js"></script>
+        <script src="/static/js/main.js"></script>
+    </head>
+    <body>
         <nav>
             <ul>
                 <? if ($user->is_admin) { ?>
@@ -14,5 +17,10 @@
                         <? } ?>
                     </li>
                 <? } ?>
+                <li>
+                    <a href="./?action=entry_new">New message</a>
+                </li>
             </ul>
         </nav>
+
+        <h1>Guest book</h1>
