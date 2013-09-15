@@ -4,7 +4,6 @@
     class FormField {
 
         public function __construct($data) {
-//            dump($data);
             $this->fill_data($data);
         }
 
@@ -28,7 +27,6 @@
         ];
 
         function __construct($object) {
-//            dump($object);
             foreach(get_object_vars($object) as $field_name => $field) {
 //                var_dump($object);
                 $this->fields[] = new FormField([

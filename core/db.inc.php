@@ -16,26 +16,32 @@
             try {
                 $dbh = new PDO('mysql:host='. Config::DB_HOST .';dbname='. Config::DB_NAME, Config::DB_USER, Config::DB_PASS, array(PDO::ATTR_PERSISTENT => false));
                 $stmt = $dbh->prepare($this->query_text);
-                $stmt->execute();
+                $result = $stmt->execute();
+                echo 'db exec result: <b>'. $stmt->errorInfo()[2] .'</b><br>';
+                if (!$result) return false;
 
                 $this->data = $stmt->fetchAll();
-
+                echo 'db data returned: ';
+                var_dump($this->data);
+                if (!$this->data) return false;
             } catch (PDOException $e) {
-                print "Error!: " . $e->getMessage() . "<br/>";
-                die();
+                print "<h2>Error!: " . $e->getMessage() . "</h2>";
+//                die();
+                return false;
             }
+            return true;
         }
 
         public function get_all() {
             $this->query_text = 'SELECT * FROM '. $this->table;
-            $this->execute();
-            return $this->data;
+            if ($this->execute()) return $this->data;
+            else return null;
         }
 
         public function get($id) {
-            $this->query_text = 'SELECT FROM '. $this->table .' WHERE id='. $id;
-            $this->execute();
-            return $this->data;
+            $this->query_text = 'SELECT * FROM '. $this->table .' WHERE id='. $id;
+            if ($this->execute()) return $this->data[0];
+            else return null;
         }
 
         public function save($id, $data) {
@@ -51,7 +57,7 @@
             $values = join(', ', $values);
             $fields_values = join(', ', $fields_values);
             $this->query_text = 'INSERT INTO '. $this->table .' ('. $fields .') VALUES('. $values .') ON DUPLICATE KEY UPDATE '. $fields_values;
-            $this->execute();
+            return $this->execute();
         }
 
     }

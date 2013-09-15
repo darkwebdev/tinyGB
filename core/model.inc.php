@@ -54,33 +54,35 @@
             $query = new Query(get_called_class());
             $data = $query->get_all();
 
-            $objects = [];
-            foreach ($data as $object_data) {
-                $objects[] = self::create_object($object_data);
+            if ($data) {
+                $objects = [];
+                foreach ($data as $object_data) {
+                    $objects[] = self::create_object($object_data);
+                }
+                return $objects;
+            } else {
+                return null;
             }
-            return $objects;
-
         }
 
         static function get($id) {
             $query = new Query(get_called_class());
             $data = $query->get($id);
-
-            echo 'making sql query...';
-            $data = [ // mocked data
-                'id' => 1,
-                'name' => 'title',
-                'text' => 'text<br>text',
-                'created' => '01-09-2013',
-                'is_active' => true
-            ];
+            echo 'get: ';
+            var_dump($data);
 
             return self::create_object($data);
         }
 
         public function save() {
             $query = new Query(get_called_class());
-            $status = $query->save($this->id, get_object_vars($this));
+            if ($query->save($this->id, get_object_vars($this))) {
+                echo 'db returned success<br>';
+                return true;
+            } else {
+                echo 'db returned failure<br>';
+                return false;
+            }
         }
 
     }
@@ -90,10 +92,12 @@
         public $is_admin;
 
         public function __construct($data=[]) {
+            echo 'construct data: ';
+            var_dump($data);
             parent::__construct();
             $this->name->editable = false;
             $this->pass = new StringField('Password'); // @todo: change to password_field type
-            $this->is_admin = new BoolField('Is Admin?');
+            $this->is_admin = new BoolField('Administrator rights');
             $this->is_admin->editable = false;
 
             $this->apply_data($data);
