@@ -28,8 +28,8 @@
             }
 
             if ($this->request->method == 'POST') {
-                echo 'post:';
-                var_dump($this->request->post);
+//                echo 'post:';
+//                var_dump($this->request->post);
                 $object->apply_data($this->request->post);
                 $object->save();
             }
@@ -41,6 +41,30 @@
                 'form' => $form,
                 'template' => 'edit'
             ];
+        }
+
+        public function object_delete($class_name, $id) {
+            Analog::log('controller->delete: '. $id);
+            if ($id) {
+                $object = $class_name::get($id);
+                if (!$object) {
+                    $this->http404();
+                    return;
+                } else {
+                    $object->is_active = false;
+                    if ($object->save()) {
+                        $this->context = [
+                            'result' => true,
+                            'msg' => $class_name .' deleted'
+                        ];
+                    } else {
+                        $this->context = [
+                            'result' => false,
+                            'msg' => 'Could not delete '. $class_name
+                        ];
+                    }
+                }
+            }
         }
 
         public function entry_list() {

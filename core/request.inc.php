@@ -19,7 +19,8 @@
             $this->cookie = new Dict($_COOKIE);
             $this->method = $_SERVER['REQUEST_METHOD'];
             $this->is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
-            $this->query = new Dict(sanitize($this->server->get('QUERY_STRING')));
+            parse_str($this->server->get('QUERY_STRING'), $array);
+            $this->query = new Dict(sanitize($array));
 
             $this->extract_user();
         }

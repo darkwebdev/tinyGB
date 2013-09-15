@@ -4,10 +4,10 @@
     include_once('field.inc.php');
 
     abstract class Model {
-        public $id;
-        public $name;
-        public $created;
-        public $is_active;
+        protected $id;
+        protected $name;
+        protected $created;
+        protected $is_active;
 
         function __construct($vars=[]) {
             $this->id = new AutoIncrementField();
@@ -47,6 +47,16 @@
             return $value;
         }
 
+        public function __set($property, $value) {
+//            var_dump($property);
+            if (property_exists($this, $property)) {
+                $this->$property->value = $value;
+            }
+
+            // @todo: add additional checks
+            return $this;
+        }
+
         static function get_all($filter=[]) {
             $query = new Query(get_called_class());
             $data = $query->get_all($filter);
@@ -72,12 +82,13 @@
         }
 
         public function save() {
+            Analog::log('model->save');
             $query = new Query(get_called_class());
             if ($query->save($this->id, get_object_vars($this))) {
-//                echo 'db returned success<br>';
+                Analog::log('db returned success');
                 return true;
             } else {
-//                echo 'db returned failure<br>';
+                Analog::log('db returned failure');
                 return false;
             }
         }
@@ -93,8 +104,8 @@
     }
 
     class User extends Model {
-        public $pass;
-        public $is_admin;
+        protected $pass;
+        protected $is_admin;
 
         public function __construct($data=[]) {
 //            echo 'construct data: ';
@@ -114,8 +125,8 @@
 
 
     class Entry extends Model {
-        public $text;
-        public $author;
+        protected $text;
+        protected $author;
 
         public function __construct($data=[]) {
             parent::__construct();

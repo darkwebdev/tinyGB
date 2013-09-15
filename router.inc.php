@@ -25,6 +25,10 @@
                     $id = $request->query->get('id');
                     $response->object_edit('Entry', $id);
                     break;
+                case 'entry_delete':
+                    $id = $request->query->get('id');
+                    $response->object_delete('Entry', $id);
+                    break;
 
                 case 'user_new':
                     $response->object_edit('User');

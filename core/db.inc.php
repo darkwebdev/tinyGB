@@ -12,23 +12,23 @@
         }
 
         private function execute() {
-//            echo 'SQL: '. $this->query_text .'<br>';
+            Analog::log('SQL: '. $this->query_text);
             try {
                 $dbh = new PDO('mysql:host='. Config::DB_HOST .';dbname='. Config::DB_NAME, Config::DB_USER, Config::DB_PASS, array(PDO::ATTR_PERSISTENT => false));
                 $stmt = $dbh->prepare($this->query_text);
                 $result = $stmt->execute();
-//                echo 'db exec result: <b>'. $stmt->errorInfo()[2] .'</b><br>';
+//                Analog::log('db exec result: '. $stmt->errorInfo()[2]);
                 if (!$result) return false;
 
                 $this->data = $stmt->fetchAll();
-//                echo 'db data returned: ';
+//                Analog::log('db data returned '. count($this->data) .' rows');
 //                var_dump($this->data);
-                if (!$this->data) return false;
+                if ($this->data === null) return false;
             } catch (PDOException $e) {
-                print "<h2>Error!: " . $e->getMessage() . "</h2>";
-//                die();
+                Analog::log("Error!: " . $e->getMessage());
                 return false;
             }
+//            Analog::log('db returned success');
             return true;
         }
 
@@ -55,6 +55,7 @@
         }
 
         public function save($id, $data) {
+            Analog::log('db->save');
             //insert into table (id, name, age) values(1, "A", 19) on duplicate key update name=values(name), age=values(age)
             foreach ($data as $field => $value) {
 //                var_dump($value);

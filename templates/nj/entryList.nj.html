@@ -18,14 +18,14 @@
                             <ul>
 
                                 <li>
-                                    {% if entry.is_active %}
+                                    {% if entry.is_active == 0 %}
                                         <div class="notice">HIDDEN</div>
                                     {% endif %}
-                                    <a href="./?action=entry_edit&id={{ entry.id }}">edit</a>
+                                    <a href="#msg/{{ entry.id }}">edit</a>
                                 </li>
 
                                 <li>
-                                    <a href="./?action=entry_delete&id={{ entry.id }}">delete</a>
+                                    <a href="#msg/{{ entry.id }}/delete">delete</a>
                                 </li>
 
                             </ul>

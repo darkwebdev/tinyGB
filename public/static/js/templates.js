@@ -85,14 +85,14 @@ output += runtime.suppressValue(runtime.memberLookup((t_3),"text", env.autoesc),
 output += "\n                    </section>\n\n                    ";
 if(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "user")),"is_admin", env.autoesc)) {
 output += "\n                        <footer>\n                            <ul>\n\n                                <li>\n                                    ";
-if(runtime.memberLookup((t_3),"is_active", env.autoesc)) {
+if(runtime.memberLookup((t_3),"is_active", env.autoesc) == 0) {
 output += "\n                                        <div class=\"notice\">HIDDEN</div>\n                                    ";
 }
-output += "\n                                    <a href=\"./?action=entry_edit&id=";
+output += "\n                                    <a href=\"#msg/";
 output += runtime.suppressValue(runtime.memberLookup((t_3),"id", env.autoesc), env.autoesc);
-output += "\">edit</a>\n                                </li>\n\n                                <li>\n                                    <a href=\"./?action=entry_delete&id=";
+output += "\">edit</a>\n                                </li>\n\n                                <li>\n                                    <a href=\"#msg/";
 output += runtime.suppressValue(runtime.memberLookup((t_3),"id", env.autoesc), env.autoesc);
-output += "\">delete</a>\n                                </li>\n\n                            </ul>\n                        </footer>\n                    ";
+output += "/delete\">delete</a>\n                                </li>\n\n                            </ul>\n                        </footer>\n                    ";
 }
 output += "\n\n                </article>\n            </li>\n        ";
 }
@@ -111,7 +111,7 @@ root: root
 
 })();
 if(typeof define === "function" && define.amd) {
-    define(["../../."], function(nunjucks) {
+    define(["nunjucks"], function(nunjucks) {
         nunjucks.env = new nunjucks.Environment([], null);
         nunjucks.env.registerPrecompiled(templates);
         return nunjucks;
