@@ -6,6 +6,7 @@
         protected $default_value;
         protected $type;
         protected $editable = true;
+        protected $readonly = false;
 
         public function __construct($name=null) {
             $this->type = get_called_class();
@@ -37,12 +38,15 @@
             return (string)$this->value;
         }
 
-        public function get_db_value() {
+        public function to_db_format() {
             switch ($this->type) {
                 case 'StringField':
                 case 'TextField':
                 case 'DateTimeField':
                     return '"'. $this->value .'"';
+                    break;
+                case 'PasswordField':
+                    return Auth::get_hash($this->value);
                     break;
                 case 'BoolField':
                     return $this->value ? 1 : 0;
@@ -68,6 +72,10 @@
     class TextField extends StringField {
     }
 
+    class PasswordField extends StringField {
+        protected $readonly = true;
+    }
+
     class DateTimeField extends StringField {
         protected $default_value = '01-01-1970';
     }
@@ -78,7 +86,7 @@
 
     class AutoIncrementField extends NumberField {
         protected $default_value = null;
-        protected $editable = false;
+        protected $readonly = true;
     }
 
     class ForeignKey extends Field {
@@ -87,7 +95,7 @@
         public function __toString() {
             $class_name = $this->model;
             $object = $class_name::get($this->value);
-            return (string)$object->name;
+            return $object ? (string)$object->name : '';
         }
     }
 

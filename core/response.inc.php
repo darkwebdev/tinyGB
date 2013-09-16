@@ -10,10 +10,13 @@
         }
 
         public function render() {
+            session_write_close();
+
             $this->common_context();
             if ($this->request->is_ajax) {
                 unset($this->context['template']);
-                print json_serialize($this->context);
+                $show_all = $this->request->is_user_admin();
+                print json_serialize($this->context, $show_all);
 //                print json_encode($this->context);
             } else {
                 if (array_key_exists('template', $this->context)) {
@@ -31,9 +34,25 @@
 
         public function http404() {
             $this->context = [
-                'html_title' => 'Error 404',
+                'title' => 'Error 404',
                 'template' => 'http404'
             ];
+        }
+        public function http401() {
+            $this->context = [
+                'title' => 'Error 401: Unauthorized',
+                'template' => 'http401'
+            ];
+        }
+
+        public function set_user($user_id) {
+            if ($user_id) {
+                session_regenerate_id(true);
+                $_SESSION['user'] = $user_id;
+            } else {
+                session_destroy();
+                unset($_SESSION['user']);
+            }
         }
     }
 

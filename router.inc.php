@@ -31,12 +31,24 @@
                     break;
 
                 case 'user_new':
-                    $response->object_edit('User');
+                    $user_name = $request->query->get('user');
+                    $pass = $request->query->get('pass');
+                    $pass_confirm = $request->query->get('pass_confirm');
+                    $response->user_create($user_name, $pass, $pass_confirm);
                     break;
                 case 'user_edit':
                     $id = $request->query->get('id');
                     $response->object_edit('User', $id);
                     break;
+                case 'user_login':
+                    $user_name = $request->query->get('user');
+                    $pass = $request->query->get('pass');
+                    $response->user_login($user_name, $pass);
+                    break;
+                case 'user_logout':
+                    $response->user_logout();
+                    break;
+
                 default:
                     $response->http404();
             }

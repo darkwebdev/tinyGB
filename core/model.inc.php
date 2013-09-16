@@ -22,15 +22,11 @@
         }
 
         public function apply_data($data) {
-//            var_dump(xdebug_get_function_stack());
             foreach ($data as $field => $value) {
-//                echo 'field: '. $field;
                 if(isset($this->{$field})) {
                     $this->{$field}->value = $value;
                 }
-//                var_dump($this->{$field});
             }
-//            var_dump($this);
         }
 
         private static function create_object($data) {
@@ -78,49 +74,43 @@
 //            echo 'get: ';
 //            var_dump($data);
 
-            return self::create_object($data);
+            if ($data) {
+                return self::create_object($data);
+            } else {
+                return null;
+            }
+        }
+
+        static function get_by($field) {
+            $query = new Query(get_called_class());
+            $data = $query->get_by($field);
+//            echo 'get: ';
+//            var_dump($data);
+
+            if ($data) {
+                return self::create_object($data);
+            } else {
+                return null;
+            }
         }
 
         public function save() {
-            Analog::log('model->save');
+            ChromePhp::log('model->save');
             $query = new Query(get_called_class());
-            if ($query->save($this->id, get_object_vars($this))) {
-                Analog::log('db returned success');
-                return true;
-            } else {
-                Analog::log('db returned failure');
-                return false;
-            }
+            $id = $query->save($this->id, get_object_vars($this));
+            if ($id) $this->id = $id;
+            ChromePhp::log('DB last id', $id);
+            return $id;
         }
 
         public function as_array() {
             $object_array = [];
             foreach (get_object_vars($this) as $field => $value) {
-                $object_array[$field] = $value->value;
+                $object_array[$field] = (string)$value;
             }
             return $object_array;
         }
 
-    }
-
-    class User extends Model {
-        protected $pass;
-        protected $is_admin;
-
-        public function __construct($data=[]) {
-//            echo 'construct data: ';
-//            var_dump($data);
-            parent::__construct();
-
-            $this->name->editable = false;
-            $this->pass = new StringField('Password'); // @todo: change to password_field type
-
-            $this->is_admin = new BoolField('Administrator rights');
-            $this->is_admin->editable = false;
-
-            $this->apply_data($data);
-//            var_dump($this);
-        }
     }
 
 
@@ -135,6 +125,7 @@
 
             $this->author = new ForeignKey();
             $this->author->model = 'User';
+            $this->author->editable = false;
 
             $this->apply_data($data);
         }

@@ -1,12 +1,12 @@
-<ul class="entries">
+<ul class="unstyled entries">
     {% for entry in entry_list %}
         {% if entry.is_active or user.is_admin %}
-            <li>
-                <article>
+            <li class="unstyled">
+                <blockquote>
                     <header>
                         <div class="author">{{ entry.author }}</div>
-                        <div class="title">{{ entry.name }}</div>
-                        <div class="time">{{ entry.created }}</div>
+                        <div class="title"><strong>{{ entry.name }}</strong></div>
+                        <div class="time muted"><em>{{ entry.created }}</em></div>
                     </header>
 
                     <section>
@@ -32,7 +32,7 @@
                         </footer>
                     {% endif %}
 
-                </article>
+                </blockquote>
             </li>
         {% endif %}
     {% endfor %}

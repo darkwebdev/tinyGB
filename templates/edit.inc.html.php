@@ -22,7 +22,7 @@
                                 <? } else { ?>
                                     <? if ($field->value) { ?>
                                         value="<?= $field->value ?>"
-                                    <? } ?>
+
                                 <? } ?>
                                 >
                         <? } ?>

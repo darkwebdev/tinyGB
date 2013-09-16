@@ -30,19 +30,31 @@
         function __construct($object) {
             foreach(get_object_vars($object) as $field_name => $field) {
 //                var_dump($object);
-                $this->fields[] = new FormField([
-                    'name' => $field_name,
-                    'label' => $field->name ? $field->name : ucfirst($field_name),
-                    'value' => $field->value ? $field->value : ($field->default_value ? $field->default_value : ''),
-                    'type' => $this->get_input_type($field->type),
-                    'editable' => $field->editable
-                ]);
+                if (!$field->readonly) {
+                    $this->fields[] = new FormField([
+                        'name' => $field_name,
+                        'label' => $field->name ? $field->name : ucfirst($field_name),
+                        'value' => $field->value ? $field->value : ($field->default_value ? $field->default_value : ''),
+                        'type' => $this->get_input_type($field->type),
+                        'editable' => $field->editable
+                    ]);
+                }
             }
 //            var_dump($this->fields);
         }
 
         private function get_input_type($field_type) {
             return self::$field2input[$field_type];
+        }
+
+        public function as_array($show_all=false) {
+            $object_array = [];
+            foreach ($this->fields as $field => $value) {
+                if ($show_all || $field->editable) {
+                    $object_array[$field] = (string)$value;
+                }
+            }
+            return $object_array;
         }
 
     }

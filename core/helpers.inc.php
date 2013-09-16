@@ -1,20 +1,19 @@
 <?
 
-    function json_serialize($data) {
-        return str_replace('\\u0000*\\u0000', '', json_encode(objectToArray($data)));
+    function json_serialize($data, $show_all=false) {
+        return str_replace('\\u0000*\\u0000', '', json_encode(objectToArray($data, $show_all)));
     }
-    function objectToArray($object) {
+    function objectToArray($object, $show_all=false) {
         if (!is_object($object) && !is_array($object)) {
             return $object;
         }
         if (is_object($object)) {
-            $object = $object->as_array();
+            $object = $object->as_array($show_all);
         }
         return array_map('objectToArray', $object);
     }
 
     function sanitize($data) {
-//        var_dump($data);
         if (is_array($data)) {
             $result = [];
             foreach($data as $field => $value) {
@@ -54,7 +53,7 @@
 
         private function parse($string) {
             parse_str($string, $dict);
-            return $dict;
+            return $dict ? $dict : [];
         }
     }
 
