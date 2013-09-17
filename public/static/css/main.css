@@ -106,7 +106,7 @@ textarea {
 
 body {
   margin: 0;
-  padding: 10px;
+  padding: 20px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
@@ -2041,12 +2041,12 @@ input[type="submit"].btn::-moz-focus-inner {
 
 .nav {
   margin-bottom: 20px;
-  margin-left: 0;
+  margin-left: -10px;
   list-style: none;
 }
 
 .nav > li > a {
-  display: block;
+  display: inline-block;
 }
 
 .nav > li > a:hover,

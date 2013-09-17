@@ -71,8 +71,10 @@
 
             $user = User::auth($user_name, $pass);
             if ($user) {
+                ChromePhp::log('user', $user);
                 $this->request->user = $user;
                 $this->set_user($user->id);
+                $this->context['result'] = true;
             }
         }
 

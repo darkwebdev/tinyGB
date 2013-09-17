@@ -14,6 +14,8 @@
         public $session;
 
         function __construct() {
+            session_start();
+
             $this->session = new Dict(sanitize(isset($_SESSION) ? $_SESSION : []));
             ChromePhp::log('session', $this->session);
             $this->server = new Dict(sanitize($_SERVER));
@@ -30,8 +32,6 @@
             $this->query = new Dict(sanitize($array));
             ChromePhp::log($this->method, $this->is_ajax ? 'AJAX' : '', $this->server->get('QUERY_STRING'), $_POST);
 
-            session_start();
-
             $this->detect_user();
         }
 
@@ -46,6 +46,7 @@
         }
 
         public function is_user_admin() {
+            ChromePhp::log('is admin', $this->user, $this->user->is_admin);
             return $this->user && $this->user->is_admin;
         }
 

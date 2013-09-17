@@ -29,9 +29,12 @@ class User extends Model {
 
     public static function auth($user_name, $pass) {
         $user = self::get_by('name', $user_name);
-        if ($user && Auth::check($pass, $user->pass)) {
+        ChromePhp::log('auth check', (string)$user->pass, $user_name, $pass);
+        if ($user && Auth::check($pass, (string)$user->pass)) {
+            ChromePhp::log('auth ok');
             return $user;
         } else {
+            ChromePhp::log('auth failed');
             return null;
         }
     }

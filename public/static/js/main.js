@@ -5,6 +5,18 @@ var control = function(settings) {
 
     msg.show('Loading data...');
 
+    /*$.ajax({
+        url: settings.url,
+        type: 'POST',
+        data: settings.data
+    }).done(function(data) {
+        renderTo(data, settings.tplFile);
+        msg.hide();
+    }).error(function() {
+        console.log('Ajax error');
+        msg.show('Connection error', false);
+    });*/
+
     microAjax(
         settings.url,
         function(data) {
@@ -224,8 +236,8 @@ var microAjax = function(url, callbackFunction, data) {
 
         if (this.postBody !== "") {
             req.open("POST", url, true);
-            req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            req.setRequestHeader('Connection', 'close');
+            req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+//            req.setRequestHeader('Connection', 'close');
         } else {
             req.open("GET", url, true);
         }

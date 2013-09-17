@@ -1,39 +1,37 @@
 <ul class="unstyled entries">
     {% for entry in entry_list %}
-        {% if entry.is_active or user.is_admin %}
-            <li class="unstyled">
-                <blockquote>
-                    <header>
-                        <div class="author">{{ entry.author }}</div>
-                        <div class="title"><strong>{{ entry.name }}</strong></div>
-                        <div class="time muted"><em>{{ entry.created }}</em></div>
-                    </header>
+        <li class="unstyled">
+            <blockquote>
+                <header>
+                    <div class="author">{{ entry.author }}</div>
+                    <div class="title"><strong>{{ entry.name }}</strong></div>
+                    <div class="time muted"><em>{{ entry.created }}</em></div>
+                </header>
 
-                    <section>
-                        {{ entry.text }}
-                    </section>
+                <section>
+                    {{ entry.text }}
+                </section>
 
-                    {% if user.is_admin %}
-                        <footer>
-                            <ul>
+                {% if user.is_admin %}
+                    <footer>
+                        <ul>
 
-                                <li>
-                                    {% if entry.is_active == 0 %}
-                                        <div class="notice">HIDDEN</div>
-                                    {% endif %}
-                                    <a href="#msg/{{ entry.id }}">edit</a>
-                                </li>
+                            <li>
+                                {% if entry.is_active == 0 %}
+                                    <div class="notice">HIDDEN</div>
+                                {% endif %}
+                                <a href="#msg/{{ entry.id }}">edit</a>
+                            </li>
 
-                                <li>
-                                    <a href="#msg/{{ entry.id }}/delete">delete</a>
-                                </li>
+                            <li>
+                                <a href="#msg/{{ entry.id }}/delete">delete</a>
+                            </li>
 
-                            </ul>
-                        </footer>
-                    {% endif %}
+                        </ul>
+                    </footer>
+                {% endif %}
 
-                </blockquote>
-            </li>
-        {% endif %}
+            </blockquote>
+        </li>
     {% endfor %}
 </ul>

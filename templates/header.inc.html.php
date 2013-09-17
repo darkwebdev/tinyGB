@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Tiny GuestBook<?= " &ndash; ". $title ?></title>
+<!--        <script src="/static/js/jquery-2.0.3.min.js"></script>-->
         <script src="/static/js/routie.min.js"></script>
-        <script src="/static/js/miniajax.min.js"></script>
         <script src="/static/js/nunjucks.js"></script>
         <script src="/static/js/templates.min.js"></script>
         <script src="/static/js/main.js"></script>
@@ -15,26 +15,27 @@
             <h1>Tiny Guestbook <small class="subheader"></small></h1>
         </div>
 
+        <? if ($user) { ?>
+            <div class="greetings">
+                <p class="lead">Hello, <span class="user-name"><?= $user->name ?></span></p>
+            </div>
+        <? } ?>
+
         <nav>
             <ul class="nav nav-pills">
+
                 <li>
                     <a href="/">Home</a>
                 </li>
-                <? if ($user && $user->is_admin) { ?>
-                    <li>
-                        Users:
-                        <? foreach ($user_list as $user_object) { ?>
-                            <a href="#user/<?= $user_object->id ?>"><?= $user_object->name ?></a>
-                        <? } ?>
-                    </li>
-                <? } ?>
+
                 <? if ($user) { ?>
-                    <li>
-                        <span class="user-name"><?= $user->name ?></span> (<a href="#logout">Logout</a>)
-                    </li>
                     <li>
                         <a href="#new">New message</a>
                     </li>
+                    <li>
+                         <a href="#logout">Logout</a>
+                    </li>
+
                 <? } else { ?>
                     <li>
                         <a href="#login">Login</a>

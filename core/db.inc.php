@@ -35,6 +35,7 @@
         }
 
         public function get_all($filter_data) {
+            ChromePhp::log('filter', $filter_data);
             $filter_query = '';
             if (count($filter_data)) {
                 $filter_query = ' WHERE ';
@@ -42,6 +43,7 @@
                 foreach($filter_data as $field => $value) {
                     $filter_list[] = $field .'='. $value;
                 }
+                ChromePhp::log('filter', $filter_list);
                 $filter_query .= join(', ', $filter_list);
             }
             $this->query_text = 'SELECT * FROM '. $this->table . $filter_query;

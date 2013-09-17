@@ -38,7 +38,7 @@
         public function __get($prop) {
             $value = null;
             if (property_exists($this, $prop)) {
-                $value = $this->$prop;
+                $value = $this->$prop->value;
             }
             return $value;
         }
