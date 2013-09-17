@@ -1,25 +1,25 @@
-<form method="POST">
-    <ul>
-        <li>
-            <span class="label">Username:</span>
-            <span class="input">
-                <input name="user_name" value="{{ user_name.value }}">
-            </span>
-        </li>
-        <li>
-            <span class="label">Password:</span>
-            <span class="input">
-                <input type="password" name="pass">
-            </span>
-        </li>
-        <li>
-            <span class="label">Confirm password:</span>
-            <span class="input">
-                <input type="password" name="pass_confirm">
-            </span>
-        </li>
-        <li>
-            <input type="submit" value="Create">
-        </li>
-    </ul>
+<form method="POST" action="./?action=user_new" class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">Username*:</label>
+        <div class="controls">
+            <input type="text" name="user_name" value="{{ user_name }}">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Password*:</label>
+        <div class="controls">
+            <input type="password" name="pass">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Confirm password*:</label>
+        <div class="controls">
+            <input type="password" name="pass_confirm">
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+    </div>
 </form>

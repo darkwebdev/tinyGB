@@ -55,6 +55,11 @@
             if ($this->execute() && $this->data) return $this->data[0];
             else return null;
         }
+        public function get_by($field, $value) {
+            $this->query_text = 'SELECT * FROM '. $this->table .' WHERE '. $field .'="'. $value .'"';
+            if ($this->execute() && $this->data) return $this->data[0];
+            else return null;
+        }
 
         public function save($id, $data) {
             ChromePhp::log('db->save');

@@ -3,10 +3,11 @@
     <head>
         <title>Tiny GuestBook<?= " &ndash; ". $title ?></title>
         <script src="/static/js/routie.min.js"></script>
-        <script src="/static/js/nunjucks-min.js"></script>
+        <script src="/static/js/miniajax.min.js"></script>
+        <script src="/static/js/nunjucks.js"></script>
         <script src="/static/js/templates.min.js"></script>
         <script src="/static/js/main.js"></script>
-        <link rel="stylesheet" href="/static/css/main.min.css"
+        <link rel="stylesheet" href="/static/css/main.css">
     </head>
     <body>
 
@@ -38,11 +39,14 @@
                     <li>
                         <a href="#login">Login</a>
                     </li>
+                    <li>
+                        <a href="#reg">or Register</a>
+                    </li>
                 <? } ?>
 
             </ul>
         </nav>
 
-        <div class="msg"></div>
+        <div class="msg"><span class="alert alert-info">Loading data...</span></div>
 
         <main>

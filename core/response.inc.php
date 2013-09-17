@@ -13,17 +13,18 @@
             session_write_close();
 
             $this->common_context();
+
             if ($this->request->is_ajax) {
+                ChromePhp::log('response render AJAX', $this->context);
                 unset($this->context['template']);
                 $show_all = $this->request->is_user_admin();
                 print json_serialize($this->context, $show_all);
 //                print json_encode($this->context);
             } else {
-                if (array_key_exists('template', $this->context)) {
-                    $template = new Template($this->context);
-                    $template->prefix = $this->context['template'];
-                    print $template->get_html();
-                }
+                ChromePhp::log('response render', $this->context);
+                $template = new Template($this->context);
+                $template->prefix = array_key_exists('template', $this->context) ? $this->context['template'] : 'home';
+                print $template->get_html();
             }
         }
 

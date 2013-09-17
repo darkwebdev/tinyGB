@@ -81,9 +81,9 @@
             }
         }
 
-        static function get_by($field) {
+        static function get_by($field, $value) {
             $query = new Query(get_called_class());
-            $data = $query->get_by($field);
+            $data = $query->get_by($field, $value);
 //            echo 'get: ';
 //            var_dump($data);
 

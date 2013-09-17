@@ -14,6 +14,10 @@
             $response = new MyResponse($request);
 
             switch ($action) {
+                case null:
+                    $response->home();
+                    break;
+
                 case 'entries':
                     $response->entry_list();
                     break;
@@ -31,9 +35,9 @@
                     break;
 
                 case 'user_new':
-                    $user_name = $request->query->get('user');
-                    $pass = $request->query->get('pass');
-                    $pass_confirm = $request->query->get('pass_confirm');
+                    $user_name = $request->post->get('user_name');
+                    $pass = $request->post->get('pass');
+                    $pass_confirm = $request->post->get('pass_confirm');
                     $response->user_create($user_name, $pass, $pass_confirm);
                     break;
                 case 'user_edit':
@@ -41,8 +45,8 @@
                     $response->object_edit('User', $id);
                     break;
                 case 'user_login':
-                    $user_name = $request->query->get('user');
-                    $pass = $request->query->get('pass');
+                    $user_name = $request->post->get('user_name');
+                    $pass = $request->post->get('pass');
                     $response->user_login($user_name, $pass);
                     break;
                 case 'user_logout':

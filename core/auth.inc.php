@@ -28,7 +28,7 @@ class User extends Model {
     }
 
     public static function auth($user_name, $pass) {
-        $user = self::get_by(['name' => $user_name]);
+        $user = self::get_by('name', $user_name);
         if ($user && Auth::check($pass, $user->pass)) {
             return $user;
         } else {

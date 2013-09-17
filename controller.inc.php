@@ -16,49 +16,64 @@
         }
 
         public function user_create($user_name, $pass, $pass_confirm) {
-//            if ($this->request->is_user_admin()) {
-                if ($this->request->method == 'POST') {
-                    if ($pass == $pass_confirm) {
-                        $user = new User([
-                            'name' => $user_name,
-                            'pass' => $pass
-                        ]);
-                        if ($user->save()) {
-                            $this->request->user = $user;
-                            $this->set_user($user->id);
-                            $this->context = [
-                                'result' => true,
-                                'msg' => 'User '. $user->name .'created'
-                            ];
-                        }
-                    } else {
-                        $this->context = [
-                            'result' => false,
-                            'msg' => 'Passwords are different'
-                        ];
-                    }
-                }
-                $this->context = [
-                    'title' => 'Login',
-                    'user_name' => $user_name
-                ];
-//            } else {
-//                $this->http401();
-//            }
-        }
-        public function user_login($user_name, $pass) {
-            if ($this->request->method == 'POST') {
-                $user = User::auth($user_name, $pass);
-                if ($user) {
+            ChromePhp::log('user create', $user_name, $pass, $pass_confirm);
+            $this->context = [
+                'result' => false,
+                'title' => 'Register'
+            ];
+
+            if ($this->request->method != 'POST') {
+                $this->context['result'] = true;
+                return;
+            }
+
+            if (!$user_name || !$pass || !$pass_confirm) {
+                $this->context['msg'] = 'There are errors in the form';
+                $this->context['user_name'] = $user_name;
+                return;
+            }
+
+            if ($pass == $pass_confirm) {
+                $user = new User([
+                    'name' => $user_name,
+                    'pass' => $pass
+                ]);
+                ChromePhp::log($user);
+                if ($user->save()) {
                     $this->request->user = $user;
                     $this->set_user($user->id);
-                    return;
+                    $this->context['result'] = true;
+                    $this->context['msg'] = 'User '. $user->name .' created';
                 }
+            } else {
+                $this->context['msg'] = 'Passwords are different';
             }
+
+        }
+        public function user_login($user_name, $pass) {
+            ChromePhp::log('user login', $user_name, $pass, $this->request->post);
+
             $this->context = [
-                'title' => 'Login',
-                'user_name' => $user_name
+                'result' => false,
+                'title' => 'Login'
             ];
+
+            if ($this->request->method != 'POST') {
+                $this->context['result'] = true;
+                return;
+            }
+
+            if (!$user_name || !$pass) {
+                $this->context['msg'] = 'There are errors in the form';
+                $this->context['user_name'] = $user_name;
+                return;
+            }
+
+            $user = User::auth($user_name, $pass);
+            if ($user) {
+                $this->request->user = $user;
+                $this->set_user($user->id);
+            }
         }
 
         public function user_logout() {
@@ -125,9 +140,9 @@
             }
 
             $this->context = [
-                'title' => 'Entry listing',
-                'entry_list' => $entry_list,
-                'template' => 'entry_list'
+                'result' => true,
+                'title' => 'Messages',
+                'entry_list' => $entry_list
             ];
         }
 
@@ -143,6 +158,8 @@
             }
         }
 
+        public function home() {
+        }
     }
 
 

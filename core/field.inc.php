@@ -46,7 +46,7 @@
                     return '"'. $this->value .'"';
                     break;
                 case 'PasswordField':
-                    return Auth::get_hash($this->value);
+                    return '"'. Auth::get_hash($this->value) .'"';
                     break;
                 case 'BoolField':
                     return $this->value ? 1 : 0;
