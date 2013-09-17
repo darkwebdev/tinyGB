@@ -3,7 +3,11 @@
         <li class="unstyled">
             <blockquote>
                 <header>
-                    <div class="author">{{ entry.author }}</div>
+                    <div class="author">
+                        {% if user.is_admin %}<a href="#user/{{ entry.author.id }}">{% endif %}
+                            {{ entry.author.name }}
+                        {% if user.is_admin %}</a>{% endif %}
+                    </div>
                     <div class="title"><strong>{{ entry.name }}</strong></div>
                     <div class="time muted"><em>{{ entry.created }}</em></div>
                 </header>

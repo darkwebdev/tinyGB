@@ -106,8 +106,9 @@
         public function as_array() {
             $object_array = [];
             foreach (get_object_vars($this) as $field => $value) {
-                $object_array[$field] = (string)$value;
+                $object_array[$field] = $value->to_json_format();
             }
+            ChromePhp::log('asarray', $object_array);
             return $object_array;
         }
 

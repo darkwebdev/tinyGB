@@ -11,15 +11,12 @@
         public function __construct($name=null) {
             $this->type = get_called_class();
             if ($name) $this->name = $name;
-//            var_dump($this);
-//            var_dump($editable);
-            //var_dump(xdebug_get_function_stack());
         }
 
-        public function __get($prop) {
+        public function __get($property) {
             $value = null;
-            if (property_exists($this, $prop)) {
-                $value = $this->$prop;
+            if (property_exists($this, $property)) {
+                $value = $this->$property;
             }
 
             return $value;
@@ -53,6 +50,30 @@
                     break;
                 case 'AutoIncrementField':
                     return $this->value ? $this->value : 'null';
+                    break;
+                default:
+                    return $this->value;
+            }
+        }
+
+        public function to_json_format() {
+            switch ($this->type) {
+                case 'StringField':
+                case 'TextField':
+                case 'DateTimeField':
+                    return (string)$this->value;
+                    break;
+                case 'PasswordField':
+                    return '********';
+                    break;
+                case 'BoolField':
+                    return $this->value > 0 ? true : false;
+                    break;
+                case 'AutoIncrementField':
+                    return intval($this->value);
+                    break;
+                case 'ForeignKey':
+                    return $this->get_related()->as_array();
                     break;
                 default:
                     return $this->value;
@@ -93,9 +114,12 @@
         protected $model;
 
         public function __toString() {
-            $class_name = $this->model;
-            $object = $class_name::get($this->value);
+            $object = $this->get_related();
             return $object ? (string)$object->name : '';
+        }
+        public function get_related() {
+            $class_name = $this->model;
+            return $class_name::get($this->value);
         }
     }
 
