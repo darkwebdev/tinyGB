@@ -5,74 +5,19 @@ var control = function(settings) {
 
     msg.show('Loading data...');
 
-    /*$.ajax({
-        url: settings.url,
-        type: 'POST',
-        data: settings.data
-    }).done(function(data) {
-        renderTo(data, settings.tplFile);
-        msg.hide();
-    }).error(function() {
-        console.log('Ajax error');
-        msg.show('Connection error', false);
-    });*/
-
     microAjax(
         settings.url,
         function(data) {
-            renderTo(data, settings.tplFile);
-            msg.hide();
+            if (data.redirect) {
+                document.location.href = data.redirect;
+            } else {
+                renderTo(data, settings.tplFile);
+                msg.hide();
+            }
         },
         settings.data
     );
 
-    /*var sendRequest = function(path, callback, method, data) {
-        console.log('send', path, method, data);
-        var httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function() {
-            if (httpRequest.readyState === 4) {
-                if (httpRequest.status === 200) {
-                    var data = JSON.parse(httpRequest.responseText);
-                    if (callback) callback(data);
-                }
-            }
-        };
-        httpRequest.onerror = function() {
-            console.log('Ajax error');
-        };
-
-        httpRequest.open(method, path);
-        httpRequest.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-            httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        data !== '' ? httpRequest.send(data) : httpRequest.send();
-    };*/
-
-    /*sendRequest(
-        settings.url,
-        function(data) {
-            renderTo(data, settings.tplFile);
-        },
-        settings.method || 'GET',
-        settings.data
-    );*/
-
-    /*if (settings.data) {
-        ajax.post(
-            settings.url,
-            function(data) {
-                renderTo(data, settings.tplFile);
-            },
-            settings.data
-        );
-    } else {
-        ajax.get(
-            settings.url,
-            function(data) {
-                renderTo(data, settings.tplFile);
-            }
-        );
-
-    }*/
 };
 
 /* View */

@@ -46,7 +46,7 @@
         }
 
         public function is_user_admin() {
-            ChromePhp::log('is admin', $this->user, $this->user->is_admin);
+//            ChromePhp::log('is admin', $this->user, $this->user->is_admin);
             return $this->user && $this->user->is_admin;
         }
 

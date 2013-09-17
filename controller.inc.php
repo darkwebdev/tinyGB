@@ -75,11 +75,15 @@
                 $this->request->user = $user;
                 $this->set_user($user->id);
                 $this->context['result'] = true;
+                $this->context['redirect'] = '/';
             }
         }
 
         public function user_logout() {
             $this->set_user(null);
+            $this->context = [
+                'redirect' => '/'
+            ];
         }
 
         public function object_edit($class_name, $id=null) {
