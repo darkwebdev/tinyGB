@@ -23,7 +23,8 @@
                     break;
 
                 case 'entry_new':
-                    $response->object_edit('Entry');
+                    $context = ['author' => $request->user];
+                    $response->object_edit('Entry', null, $context);
                     break;
                 case 'entry_edit':
                     $id = $request->query->get('id');

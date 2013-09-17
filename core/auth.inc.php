@@ -9,8 +9,6 @@ class User extends Model {
     protected $last_login;
 
     public function __construct($data=[]) {
-//            echo 'construct data: ';
-//            var_dump($data);
         parent::__construct();
 
         $this->name->editable = false;
@@ -24,17 +22,19 @@ class User extends Model {
         $this->last_login->editable = false;
 
         $this->apply_data($data);
-//            var_dump($this);
+    }
+
+    protected function on_apply_data($data, $add_context) {
     }
 
     public static function auth($user_name, $pass) {
         $user = self::get_by('name', $user_name);
-        ChromePhp::log('auth check', (string)$user->pass, $user_name, $pass);
+//        ChromePhp::log('auth check', (string)$user->pass, $user_name, $pass);
         if ($user && Auth::check($pass, (string)$user->pass)) {
-            ChromePhp::log('auth ok');
+//            ChromePhp::log('auth ok');
             return $user;
         } else {
-            ChromePhp::log('auth failed');
+//            ChromePhp::log('auth failed');
             return null;
         }
     }

@@ -21,12 +21,15 @@
             $this->is_active->editable = false;
         }
 
-        public function apply_data($data) {
+        abstract protected function on_apply_data($data, $add_context);
+
+        public function apply_data($data, $add_context=[]) {
             foreach ($data as $field => $value) {
                 if(isset($this->{$field})) {
                     $this->{$field}->value = $value;
                 }
             }
+            $this->on_apply_data($data, $add_context);
         }
 
         private static function create_object($data) {
@@ -44,7 +47,6 @@
         }
 
         public function __set($property, $value) {
-//            var_dump($property);
             if (property_exists($this, $property)) {
                 $this->$property->value = $value;
             }

@@ -5,5 +5,7 @@
         public function __construct($model) {
             parent::__construct($model);
         }
+
+        // @todo: implement form fields custom order
     }
 ?>

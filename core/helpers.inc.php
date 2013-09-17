@@ -10,6 +10,7 @@
         if (is_object($object)) {
             $object = $object->as_array($show_all);
         }
+
         return array_map('objectToArray', $object);
     }
 
@@ -48,11 +49,13 @@
             if (array_key_exists($key, $this->vars)) {
                 $value = $this->vars[$key];
             }
+
             return $value;
         }
 
         private function parse($string) {
             parse_str($string, $dict);
+
             return $dict ? $dict : [];
         }
     }

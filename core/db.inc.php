@@ -23,8 +23,7 @@
 
                 $this->last_id = $dbh->lastInsertId('id');
                 $this->data = $stmt->fetchAll();
-                ChromePhp::log('DB DATA:', $this->data);
-//                var_dump($this->data);
+                ChromePhp::log('server db data:', $this->data);
                 if ($this->data === null) return false;
             } catch (PDOException $e) {
                 ChromePhp::log("Error!: " . $e->getMessage());
@@ -64,10 +63,9 @@
         }
 
         public function save($id, $data) {
-            ChromePhp::log('db->save');
+            ChromePhp::log('server db->save');
             //insert into table (id, name, age) values(1, "A", 19) on duplicate key update name=values(name), age=values(age)
             foreach ($data as $field => $value) {
-//                var_dump($value);
                 $fields[] = $field;
                 $values[] = $value->to_db_format();
 //                $values[] = $value->value;

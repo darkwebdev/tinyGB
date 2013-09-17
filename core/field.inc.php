@@ -110,6 +110,7 @@
         protected $readonly = true;
     }
 
+
     class ForeignKey extends Field {
         protected $model;
 
@@ -118,11 +119,20 @@
 
             return $object ? (string)$object->name : '';
         }
+
         public function get_related() {
             $class_name = $this->model;
 
             return $class_name::get(intval($this->value));
         }
+
+        public function set_related($object) {
+            $this->value = $object->id;
+            ChromePhp::log('server FK', $object, $this->value);
+
+            return $this;
+        }
+
     }
 
     // @todo: choices

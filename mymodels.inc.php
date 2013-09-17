@@ -24,6 +24,10 @@
             return self::get_all(['is_active' => true]);
         }
 
+        protected function on_apply_data($data, $add_context) {
+            if (isset($add_context['author'])) $this->author->set_related($add_context['author']);
+        }
+
     }
 
 ?>

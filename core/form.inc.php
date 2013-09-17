@@ -18,7 +18,15 @@
             foreach (get_object_vars($this) as $name => $value) {
                 $field_array[$name] = $value;
             }
+
             return $field_array;
+        }
+
+        public function validate($data) {
+            $errors = [];
+            // @todo: implement this
+
+            return $errors;
         }
     }
 
@@ -35,6 +43,13 @@
             }
 
             return $object_array;
+        }
+
+        public function validate($data) {
+            $errors = [];
+            // @todo: implement this
+
+            return $errors;
         }
 
     }

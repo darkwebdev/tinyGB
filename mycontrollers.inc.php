@@ -87,7 +87,7 @@
             ];
         }
 
-        public function object_edit($class_name, $id=null) {
+        public function object_edit($class_name, $id=null, $add_context=[]) {
             ChromePhp::log('object edit', $class_name, $id);
 
             if (!$this->request->user) {
@@ -113,19 +113,25 @@
             $form = new ObjectForm($object);
 
             if ($this->request->method == 'POST') {
+                ChromePhp::log('server got post', $this->request->post);
+
                 $errors = $form->validate($this->request->post);
-                if ($errors) {
+                if (count($errors)) {
                     $this->context['msg'] = 'There are errors in the form';
                     $this->context['errors'] = $errors;
                     return;
                 }
-                $object->apply_data($this->request->post);
+
+                $object->apply_data($this->request->post, $add_context);
                 $object->save();
                 $this->context['result'] = true;
                 $this->context['redirect'] = true;
+
             } else {
+
                 $this->context['result'] = true;
                 $this->context['form'] = $form;
+                $this->context['url'] = $this->request->server->get('REQUEST_URI');
             }
         }
 
