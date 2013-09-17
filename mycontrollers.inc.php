@@ -1,7 +1,7 @@
 <?
-    include_once('core/request.inc.php');
     include_once('core/response.inc.php');
-    include_once('core/form.inc.php');
+    include_once('mymodels.inc.php');
+    include_once('myforms.inc.php');
 
     class MyResponse extends Response {
 
@@ -50,6 +50,7 @@
             }
 
         }
+
         public function user_login($user_name, $pass) {
             ChromePhp::log('user login', $user_name, $pass, $this->request->post);
 
@@ -82,15 +83,26 @@
         public function user_logout() {
             $this->set_user(null);
             $this->context = [
-                'redirect' => '/'
+                'redirect' => true
             ];
         }
 
         public function object_edit($class_name, $id=null) {
+            ChromePhp::log('object edit', $class_name, $id);
+
+            if (!$this->request->user) {
+                $this->http401();
+                return;
+            }
+
+            $this->context = [
+                'result' => false,
+                'title' => $class_name .' '. ($id ? 'editing' : 'creating')
+            ];
 
             if ($id) {
                 $object = $class_name::get($id);
-                if (!$object) {
+                if (!$object || !$this->request->is_user_admin) {
                     $this->http404();
                     return;
                 }
@@ -98,20 +110,23 @@
                 $object = new $class_name();
             }
 
+            $form = new ObjectForm($object);
+
             if ($this->request->method == 'POST') {
-//                echo 'post:';
-//                var_dump($this->request->post);
+                $errors = $form->validate($this->request->post);
+                if ($errors) {
+                    $this->context['msg'] = 'There are errors in the form';
+                    $this->context['errors'] = $errors;
+                    return;
+                }
                 $object->apply_data($this->request->post);
                 $object->save();
+                $this->context['result'] = true;
+                $this->context['redirect'] = true;
+            } else {
+                $this->context['result'] = true;
+                $this->context['form'] = $form;
             }
-
-            $form = new Form($object);
-
-            $this->context = [
-                'title' => $class_name .' '. $id ? 'editing' : 'creating',
-                'form' => $form,
-                'template' => 'edit'
-            ];
         }
 
         public function object_delete($class_name, $id) {

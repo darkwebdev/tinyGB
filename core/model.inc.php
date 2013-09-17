@@ -108,31 +108,11 @@
             foreach (get_object_vars($this) as $field => $value) {
                 $object_array[$field] = $value->to_json_format();
             }
-            ChromePhp::log('asarray', $object_array);
             return $object_array;
         }
 
-    }
-
-
-    class Entry extends Model {
-        protected $text;
-        protected $author;
-
-        public function __construct($data=[]) {
-            parent::__construct();
-
-            $this->text = new TextField('Content');
-
-            $this->author = new ForeignKey();
-            $this->author->model = 'User';
-            $this->author->editable = false;
-
-            $this->apply_data($data);
-        }
-
-        static public function get_active() {
-            return self::get_all(['is_active' => true]);
+        public function get_fields() {
+            return get_object_vars($this);
         }
 
     }

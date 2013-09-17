@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Tiny GuestBook<?= " &ndash; ". $title ?></title>
+        <title>Tiny GuestBook</title>
 <!--        <script src="/static/js/jquery-2.0.3.min.js"></script>-->
         <script src="/static/js/routie.min.js"></script>
         <script src="/static/js/nunjucks.js"></script>
@@ -12,7 +12,7 @@
     <body>
 
         <div class="page-header">
-            <h1>Tiny Guestbook <small class="subheader"></small></h1>
+            <h1><a href="/">Tiny Guestbook</a> <small class="subheader"></small></h1>
         </div>
 
         <? if ($user) { ?>

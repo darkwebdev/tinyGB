@@ -12,50 +12,63 @@
                 $this->{$field} = $value;
             }
         }
+
+        public function as_array() {
+            $field_array = [];
+            foreach (get_object_vars($this) as $name => $value) {
+                $field_array[$name] = $value;
+            }
+            return $field_array;
+        }
     }
 
 
-    class Form {
+    abstract class Form {
         public $fields = [];
-        protected static $field2input = [
-            'TextField' => 'textarea',
-            'StringField' => 'text',
-            'NumberField' => 'number',
-            'AutoIncrementField' => 'number',
-            'DateTimeField' => 'text',
-            'BoolField' => 'checkbox',
-            'ForeignKey' => 'text' // @todo: must be select
-        ];
-
-        function __construct($object) {
-            foreach(get_object_vars($object) as $field_name => $field) {
-//                var_dump($object);
-                if (!$field->readonly) {
-                    $this->fields[] = new FormField([
-                        'name' => $field_name,
-                        'label' => $field->name ? $field->name : ucfirst($field_name),
-                        'value' => $field->value ? $field->value : ($field->default_value ? $field->default_value : ''),
-                        'type' => $this->get_input_type($field->type),
-                        'editable' => $field->editable
-                    ]);
-                }
-            }
-//            var_dump($this->fields);
-        }
-
-        private function get_input_type($field_type) {
-            return self::$field2input[$field_type];
-        }
 
         public function as_array($show_all=false) {
             $object_array = [];
-            foreach ($this->fields as $field => $value) {
+            foreach ($this->fields as $field) {
                 if ($show_all || $field->editable) {
-                    $object_array[$field] = (string)$value;
+                    $object_array[] = $field;
                 }
             }
+
             return $object_array;
         }
 
     }
+
+
+    class ObjectForm extends Form {
+
+        private function get_input_type($field_type) {
+            $field2input = [
+                'TextField' => 'textarea',
+                'StringField' => 'text',
+                'NumberField' => 'number',
+                'AutoIncrementField' => 'number',
+                'DateTimeField' => 'text',
+                'BoolField' => 'checkbox',
+                'ForeignKey' => 'text' // @todo: must be select
+            ];
+            return $field2input[$field_type];
+        }
+
+        public function __construct($model) {
+            $model_fields = $model->get_fields();
+            foreach($model_fields as $mfield_name => $mfield_value) {
+                if (!$mfield_value->readonly) {
+                    $this->fields[] = new FormField([
+                        'name' => $mfield_name,
+                        'label' => $mfield_value->name ? $mfield_value->name : ucfirst($mfield_name),
+                        'value' => $mfield_value->value ? $mfield_value->value->to_json_format() : null,
+                        'type' => $this->get_input_type($mfield_value->type),
+                        'editable' => $mfield_value->editable
+                    ]);
+                }
+            }
+        }
+    }
+
 ?>

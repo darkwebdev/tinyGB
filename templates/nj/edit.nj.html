@@ -1,6 +1,6 @@
 <form method="POST">
     <ul>
-        {% for field in form.fields %}
+        {% for field in form %}
             {% if field.editable or user.is_admin %}
                 <li>
 

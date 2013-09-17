@@ -115,11 +115,13 @@
 
         public function __toString() {
             $object = $this->get_related();
+
             return $object ? (string)$object->name : '';
         }
         public function get_related() {
             $class_name = $this->model;
-            return $class_name::get($this->value);
+
+            return $class_name::get(intval($this->value));
         }
     }
 

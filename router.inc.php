@@ -1,5 +1,5 @@
 <?
-    include_once('controller.inc.php');
+    include_once('mycontrollers.inc.php');
 
 
     class Router {

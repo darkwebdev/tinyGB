@@ -19,7 +19,6 @@
             $this->session = new Dict(sanitize(isset($_SESSION) ? $_SESSION : []));
             ChromePhp::log('session', $this->session);
             $this->server = new Dict(sanitize($_SERVER));
-            ChromePhp::log('server', $_SERVER);
             $this->get = new Dict(sanitize($_GET));
             ChromePhp::log('get', $_GET);
             $this->post = new Dict(sanitize($_POST));
