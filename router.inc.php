@@ -1,68 +1,71 @@
 <?
-    include_once('mycontrollers.inc.php');
+    include_once('controller_user.inc.php');
+    include_once('controller_entry.inc.php');
+    include_once('controller.inc.php');
 
 
     class Router {
         function __construct() {
-            $this->execute();
+            $response = $this->get_response();
+            $response->render();
         }
 
-        private function execute() {
-//            echo 'router->execute();';
+        private function get_response() {
             $request = new Request();
             $action = $request->get('action');
-            $response = new MyResponse($request);
+
+            $entry_response = new EntryResponse($request);
+            $user_response = new UserResponse($request);
+            $response = new GenericResponse($request);
 
             switch ($action) {
                 case null:
-                    $response->home();
-                    break;
+                    return $response->home();
+
 
                 case 'entries':
-                    $response->entry_list();
-                    break;
+                    return $entry_response->show_all();
 
                 case 'entry_new':
                     $context = array('author' => $request->user);
-                    $response->object_edit('Entry', null, $context);
-                    break;
+                    return $response->object_edit('Entry', null, $context);
+
                 case 'entry_edit':
                     $id = $request->get('id');
-                    $response->object_edit('Entry', $id);
-                    break;
+                    return $response->object_edit('Entry', $id);
+
                 case 'entry_approve':
                     $id = $request->get('id');
-                    $response->entry_approve($id);
-                    break;
+                    return $entry_response->approve($id);
+
                 case 'entry_delete':
                     $id = $request->get('id');
-                    $response->object_delete('Entry', $id);
-                    break;
+                    return $response->object_delete('Entry', $id);
+
 
                 case 'user_new':
                     $user_name = $request->get('user_name');
                     $pass = $request->get('pass');
                     $pass_confirm = $request->get('pass_confirm');
-                    $response->user_create($user_name, $pass, $pass_confirm);
-                    break;
+
+                    return $user_response->create($user_name, $pass, $pass_confirm);
                 case 'user_edit':
                     $id = $request->get('id');
-                    $response->object_edit('User', $id);
-                    break;
+                    return $response->object_edit('User', $id);
+
                 case 'user_login':
                     $user_name = $request->get('user_name');
                     $pass = $request->get('pass');
-                    $response->user_login($user_name, $pass);
-                    break;
+                    return $user_response->login($user_name, $pass);
+
                 case 'user_logout':
-                    $response->user_logout();
-                    break;
+                    return $user_response->logout();
+
 
                 default:
-                    $response->http404();
+                    return $response->http404();
             }
 
-            $response->render();
         }
     }
 

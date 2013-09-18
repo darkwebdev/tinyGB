@@ -2,7 +2,7 @@
     include_once('request.inc.php');
     include_once('view.inc.php');
 
-    class Response {
+    abstract class Response {
         protected $context = array();
         protected $request;
 
