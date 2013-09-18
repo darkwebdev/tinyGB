@@ -41,7 +41,7 @@
         public function __get($prop) {
             $value = null;
             if (property_exists($this, $prop)) {
-                ChromePhp::log('<- model prop', $this, $prop, $this->prop);
+//                ChromePhp::log('<- model prop', $this, $prop, $this->prop);
                 $value = $this->$prop->value;
             }
             return $value;
