@@ -60,7 +60,7 @@
             $data = $query->get_all($filter);
 
             if ($data) {
-                $objects = [];
+                $objects = array();
                 foreach ($data as $object_data) {
                     $objects[] = self::create_object($object_data);
                 }
@@ -106,7 +106,7 @@
         }
 
         public function as_array() {
-            $object_array = [];
+            $object_array = array();
             foreach (get_object_vars($this) as $field => $value) {
                 $object_array[$field] = $value->to_json_format();
             }

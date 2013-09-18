@@ -10,10 +10,13 @@
 
         microAjax(
             settings.url,
+            settings.method || 'GET',
             function(data) {
-                if (data.redirect) {
-                    document.location.href = '/';
+                if (data.result && data.redirect && settings.redirect) {
+                    console.log('----->client redirect', settings.redirect);
+                    document.location.href = settings.redirect;
                 } else {
+                    if (settings.title) data.title = settings.title;
                     renderTo(data, settings.tplFile);
                     msg.hide();
                 }
@@ -33,22 +36,24 @@
             return document.querySelector('.msg');
         },
         hide: function() {
-            console.log('msg', this, document.querySelector(this.cont));
-            this.getCont().innerHTML = '';
+            var cont = this.getCont();
+            setTimeout(function() {
+                cont.innerHTML = '';
+            }, 1000);
         },
         show: function(msg, result) {
             console.log('msg', this );
             if (msg) {
-                var alertClass = '';
-                if (result) {
-                    alertClass = 'alert-success';
-                } else if (result === false) {
-                    alertClass = 'alert-error';
-                } else {
-                    alertClass = 'alert-info';
-                }
                 var cont = this.getCont();
                 if (cont) {
+                    var alertClass = '';
+                    if (result) {
+                        alertClass = 'alert-success';
+                    } else if (result === false) {
+                        alertClass = 'alert-error';
+                    } else {
+                        alertClass = 'alert-info';
+                    }
                     cont.innerHTML = '<span class="alert ' + alertClass + '">' + msg + '</span>';
                 }
             } else {
@@ -70,7 +75,6 @@
         if (tplFile) {
             var html = njEnv.render(tplFile, data),
                 main = document.querySelector('main');
-            console.log('client render', main, html);
             main.innerHTML = html;
 
             var form = document.querySelector('main form');
@@ -153,7 +157,7 @@
         return q.join("&");
     };
 
-    var microAjax = function(url, callbackFunction, data) {
+    var microAjax = function(url, method, callbackFunction, data) {
         this.bindFunction = function(caller, object) {
             return function() {
                 return caller.apply(object, [object]);
@@ -183,7 +187,7 @@
             var req = this.request;
             req.onreadystatechange = this.bindFunction(this.stateChange, this);
 
-            if (this.postBody !== "") {
+            if (method == "POST") {
                 req.open("POST", url, true);
                 req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
     //            req.setRequestHeader('Connection', 'close');
@@ -204,50 +208,66 @@
         'login': function() {
             control({
                 url: './?action=user_login',
-                tplFile: 'login.nj.html'
+                tplFile: 'login.nj.html',
+                redirect: '/'
             });
         },
         'logout': function() {
             control({
                 url: './?action=user_logout',
-                method: 'POST'
+                method: 'POST',
+                redirect: '/'
             });
         },
         'reg': function() {
             control({
                 url: './?action=user_new',
-                tplFile: 'userCreate.nj.html'
+                tplFile: 'userCreate.nj.html',
+                redirect: '/'
             });
         },
         'user/:id': function(id) {
             control({
                 url: './?action=user_edit&id='+parseInt(id),
-                tplFile: 'edit.nj.html'
+                tplFile: 'edit.nj.html',
+                redirect: '#'
             });
         },
 
         'new': function() {
             control({
                 url: './?action=entry_new',
-                tplFile: 'edit.nj.html'
+                tplFile: 'edit.nj.html',
+                title: 'New message',
+                redirect: '#'
             });
         },
 
         'msg/:id': function(id) {
             control({
                 url: './?action=entry_edit&id='+parseInt(id),
-                tplFile: 'edit.nj.html'
+                tplFile: 'edit.nj.html',
+                redirect: '#'
             });
         },
 
-        'msg/:id/delete': function(id) {
-            if (confirm('Do you really want to delete this message?')) {
+        'msg/:id/ok': function(id) {
+            control({
+                url: './?action=entry_approve&id='+parseInt(id),
+                method: 'POST',
+                redirect: '#'
+            });
+        },
+
+        'msg/:id/off': function(id) {
+            //if (confirm('Do you really want to delete this message?')) {
                 control({
                     url: './?action=entry_delete&id='+parseInt(id),
-                    method: 'POST'
+                    method: 'POST',
+                    redirect: '#'
                 });
-                routie('');
-            }
+//                routie('');
+            //}
         },
 
         '': function() {

@@ -2965,5 +2965,7 @@ a.badge:focus {
 /* TinyGB styles */
 
 .msg {
-    margin: 20px 0;
+    position: absolute;
+    top: 40px;
+    right: 30px;
 }

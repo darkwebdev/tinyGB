@@ -20,16 +20,18 @@
                     <footer>
                         <ul>
 
-                            <li>
-                                {% if entry.is_active == 0 %}
-                                    <div class="notice">HIDDEN</div>
-                                {% endif %}
+                            {% if entry.is_active == 0 %}
+                                <li>
+                                    <a href="#msg/{{ entry.id }}/ok">approve</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="#msg/{{ entry.id }}/off">hide</a>
+                                </li>
+                            {% endif %}
+                            {# <li>
                                 <a href="#msg/{{ entry.id }}">edit</a>
-                            </li>
-
-                            <li>
-                                <a href="#msg/{{ entry.id }}/delete">delete</a>
-                            </li>
+                            </li> #}
 
                         </ul>
                     </footer>

@@ -16,7 +16,7 @@
 
     function sanitize($data) {
         if (is_array($data)) {
-            $result = [];
+            $result = array();
             foreach($data as $field => $value) {
                 $result[sanitize_string($field)] = sanitize_string($value);
             }

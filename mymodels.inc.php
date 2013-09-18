@@ -16,6 +16,7 @@
             $this->author->editable = false;
 
             $this->name->name = 'Title';
+            $this->text->name = 'Message';
 
             $this->apply_data($data);
         }

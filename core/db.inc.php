@@ -38,7 +38,7 @@
             $filter_query = '';
             if (count($filter_data)) {
                 $filter_query = ' WHERE ';
-                $filter_list = [];
+                $filter_list = array();
                 foreach($filter_data as $field => $value) {
                     $filter_list[] = $field .'='. $value;
                 }

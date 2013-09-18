@@ -10,7 +10,7 @@
         private function execute() {
 //            echo 'router->execute();';
             $request = new Request();
-            $action = $request->query->get('action');
+            $action = $request->get('action');
             $response = new MyResponse($request);
 
             switch ($action) {
@@ -23,15 +23,19 @@
                     break;
 
                 case 'entry_new':
-                    $context = ['author' => $request->user];
+                    $context = array('author' => $request->user);
                     $response->object_edit('Entry', null, $context);
                     break;
                 case 'entry_edit':
-                    $id = $request->query->get('id');
+                    $id = $request->get('id');
                     $response->object_edit('Entry', $id);
                     break;
+                case 'entry_approve':
+                    $id = $request->get('id');
+                    $response->entry_approve($id);
+                    break;
                 case 'entry_delete':
-                    $id = $request->query->get('id');
+                    $id = $request->get('id');
                     $response->object_delete('Entry', $id);
                     break;
 
@@ -42,7 +46,7 @@
                     $response->user_create($user_name, $pass, $pass_confirm);
                     break;
                 case 'user_edit':
-                    $id = $request->query->get('id');
+                    $id = $request->get('id');
                     $response->object_edit('User', $id);
                     break;
                 case 'user_login':

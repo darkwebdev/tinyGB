@@ -23,15 +23,21 @@
             ChromePhp::log('get', $_GET);
             $this->post = new Dict(sanitize($_POST));
             ChromePhp::log('post', $_POST);
+            $this->request = new Dict(sanitize($_REQUEST));
             $this->cookie = new Dict(sanitize($_COOKIE));
 
             $this->method = $this->server->get('REQUEST_METHOD');
             $this->is_ajax = $this->server->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest';
-            parse_str($this->server->get('QUERY_STRING'), $array);
+            parse_str(urldecode($this->server->get('QUERY_STRING')), $array);
             $this->query = new Dict(sanitize($array));
+            ChromePhp::log('server query', $this->query);
             ChromePhp::log($this->method, $this->is_ajax ? 'AJAX' : '', $this->server->get('QUERY_STRING'), $_POST);
 
             $this->detect_user();
+        }
+
+        public function get($var) {
+            return $this->request->get($var);
         }
 
         public function detect_user() {

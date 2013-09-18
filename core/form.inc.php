@@ -14,7 +14,7 @@
         }
 
         public function as_array() {
-            $field_array = [];
+            $field_array = array();
             foreach (get_object_vars($this) as $name => $value) {
                 $field_array[$name] = $value;
             }
@@ -23,7 +23,7 @@
         }
 
         public function validate($data) {
-            $errors = [];
+            $errors = array();
             // @todo: implement this
 
             return $errors;
@@ -32,10 +32,10 @@
 
 
     abstract class Form {
-        public $fields = [];
+        public $fields = array();
 
         public function as_array($show_all=false) {
-            $object_array = [];
+            $object_array = array();
             foreach ($this->fields as $field) {
                 if ($show_all || $field->editable) {
                     $object_array[] = $field;
@@ -46,7 +46,7 @@
         }
 
         public function validate($data) {
-            $errors = [];
+            $errors = array();
             // @todo: implement this
 
             return $errors;
@@ -58,7 +58,7 @@
     class ObjectForm extends Form {
 
         private function get_input_type($field_type) {
-            $field2input = [
+            $field2input = array(
                 'TextField' => 'textarea',
                 'StringField' => 'text',
                 'NumberField' => 'number',
@@ -66,7 +66,7 @@
                 'DateTimeField' => 'text',
                 'BoolField' => 'checkbox',
                 'ForeignKey' => 'text' // @todo: must be select
-            ];
+            );
             return $field2input[$field_type];
         }
 

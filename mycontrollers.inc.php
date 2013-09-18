@@ -9,18 +9,18 @@
             parent::common_context();
 
             if ($this->request->is_user_admin()) {
-                $user_list = User::get_all();
-                $this->context['user_list'] = $user_list;
+//                $user_list = User::get_all();
+//                $this->context['user_list'] = $user_list;
             }
 
         }
 
         public function user_create($user_name, $pass, $pass_confirm) {
             ChromePhp::log('user create', $user_name, $pass, $pass_confirm);
-            $this->context = [
+            $this->context = array(
                 'result' => false,
                 'title' => 'Register'
-            ];
+            );
 
             if ($this->request->method != 'POST') {
                 $this->context['result'] = true;
@@ -54,10 +54,10 @@
         public function user_login($user_name, $pass) {
             ChromePhp::log('user login', $user_name, $pass, $this->request->post);
 
-            $this->context = [
+            $this->context = array(
                 'result' => false,
                 'title' => 'Login'
-            ];
+            );
 
             if ($this->request->method != 'POST') {
                 $this->context['result'] = true;
@@ -76,15 +76,15 @@
                 $this->request->user = $user;
                 $this->set_user($user->id);
                 $this->context['result'] = true;
-                $this->context['redirect'] = '/';
+                $this->context['redirect'] = true;
             }
         }
 
         public function user_logout() {
             $this->set_user(null);
-            $this->context = [
+            $this->context = array(
                 'redirect' => true
-            ];
+            );
         }
 
         public function object_edit($class_name, $id=null, $add_context=[]) {
@@ -95,10 +95,10 @@
                 return;
             }
 
-            $this->context = [
+            $this->context = array(
                 'result' => false,
                 'title' => $class_name .' '. ($id ? 'editing' : 'creating')
-            ];
+            );
 
             if ($id) {
                 $object = $class_name::get($id);
@@ -137,26 +137,58 @@
 
         public function object_delete($class_name, $id) {
             ChromePhp::log('controller->delete: '. $id);
-            if ($id) {
-                $object = $class_name::get($id);
-                if (!$object) {
-                    $this->http404();
-                    return;
-                } else {
-                    $object->is_active = false;
-                    if ($object->save()) {
-                        $this->context = [
-                            'result' => true,
-                            'msg' => $class_name .' deleted'
-                        ];
-                    } else {
-                        $this->context = [
-                            'result' => false,
-                            'msg' => 'Could not delete '. $class_name
-                        ];
-                    }
-                }
+            ChromePhp::log('server user', $this->request->is_user_admin(), $this->request->query->get('id'));
+            if (!$this->request->is_user_admin() || !$id) {
+                $this->http401();
+                return;
             }
+
+            $object = $class_name::get($id);
+            if (!$object) {
+                $this->http404();
+                return;
+            }
+
+            $object->is_active = false;
+            if (!$object->save()) {
+                $this->context = array(
+                    'result' => false,
+                    'msg' => 'Could not delete '. $class_name
+                );
+            }
+
+            $this->context = array(
+                'result' => true,
+                'msg' => $class_name .' deleted',
+                'redirect' => true
+            );
+
+        }
+
+        public function entry_approve($id) {
+            if (!$this->request->is_user_admin() || !$id) {
+                $this->http401();
+                return;
+            }
+
+            $entry = Entry::get($id);
+            if (!$entry) {
+                $this->http404();
+                return;
+            }
+
+            $entry->is_active = true;
+            if (!$entry->save()) {
+                $this->context = array(
+                    'result' => false,
+                    'msg' => 'Could not approve Entry '
+                );
+            }
+
+            $this->context = array(
+                'result' => true,
+                'redirect' => true
+            );
         }
 
         public function entry_list() {
@@ -166,22 +198,22 @@
                 $entry_list = Entry::get_active();
             }
 
-            $this->context = [
+            $this->context = array(
                 'result' => true,
                 'title' => 'Messages',
                 'entry_list' => $entry_list
-            ];
+            );
         }
 
         public function user_list() {
             if ($this->request->is_user_admin()) {
                 $user_list = User::get_all();
 
-                $this->context = [
+                $this->context = array(
                     'title' => 'User listing',
                     'user_list' => $user_list,
                     'template' => 'user_list'
-                ];
+                );
             }
         }
 
