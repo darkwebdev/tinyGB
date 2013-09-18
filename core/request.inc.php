@@ -36,13 +36,14 @@
             parse_str(urldecode(file_get_contents('php://input')), $array);
             $this->payload = new Dict(sanitize($array));
             ChromePhp::log('<- payload', $this->payload);
+            if (!$this->post->count()) $this->post = $this->payload;
 
             $this->detect_user();
         }
 
         public function get($var) {
             $value = $this->request->get($var);
-            if (!$value && $this->method == 'POST') $value = $this->payload->get($var);
+            if (!$value && $this->method == 'POST') $value = $this->post->get($var); // maybe a bad idea
             return $value;
         }
 

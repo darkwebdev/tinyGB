@@ -58,6 +58,10 @@
 
             return $dict ? $dict : array();
         }
+
+        public function count() {
+            return count($this->vars);
+        }
     }
 
 //            var_dump($this);
