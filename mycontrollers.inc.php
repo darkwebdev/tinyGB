@@ -87,7 +87,7 @@
             );
         }
 
-        public function object_edit($class_name, $id=null, $add_context=[]) {
+        public function object_edit($class_name, $id=null, $add_context=array()) {
             ChromePhp::log('object edit', $class_name, $id);
 
             if (!$this->request->user) {

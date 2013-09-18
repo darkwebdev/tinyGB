@@ -9,7 +9,7 @@
         protected $created;
         protected $is_active;
 
-        function __construct($vars=[]) {
+        function __construct($vars=array()) {
             $this->id = new AutoIncrementField();
 
             $this->name = new StringField();
@@ -23,7 +23,7 @@
 
         abstract protected function on_apply_data($data, $add_context);
 
-        public function apply_data($data, $add_context=[]) {
+        public function apply_data($data, $add_context=array()) {
             foreach ($data as $field => $value) {
                 if(isset($this->{$field})) {
                     $this->{$field}->value = $value;
@@ -55,7 +55,7 @@
             return $this;
         }
 
-        static function get_all($filter=[]) {
+        static function get_all($filter=array()) {
             $query = new Query(get_called_class());
             $data = $query->get_all($filter);
 

@@ -8,7 +8,7 @@ class User extends Model {
     protected $is_admin;
     protected $last_login;
 
-    public function __construct($data=[]) {
+    public function __construct($data=array()) {
         parent::__construct();
 
         $this->name->editable = false;

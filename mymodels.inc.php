@@ -6,7 +6,7 @@
         protected $text;
         protected $author;
 
-        public function __construct($data=[]) {
+        public function __construct($data=array()) {
             parent::__construct();
 
             $this->text = new TextField('Content');
