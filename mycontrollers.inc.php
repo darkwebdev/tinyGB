@@ -34,10 +34,10 @@
             }
 
             if ($pass == $pass_confirm) {
-                $user = new User([
+                $user = new User(array(
                     'name' => $user_name,
                     'pass' => $pass
-                ]);
+                ));
                 ChromePhp::log($user);
                 if ($user->save()) {
                     $this->request->user = $user;

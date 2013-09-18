@@ -74,13 +74,13 @@
             $model_fields = $model->get_fields();
             foreach($model_fields as $mfield_name => $mfield_value) {
                 if (!$mfield_value->readonly) {
-                    $this->fields[] = new FormField([
+                    $this->fields[] = new FormField(array(
                         'name' => $mfield_name,
                         'label' => $mfield_value->name ? $mfield_value->name : ucfirst($mfield_name),
                         'value' => $mfield_value->value ? $mfield_value->value->to_json_format() : null,
                         'type' => $this->get_input_type($mfield_value->type),
                         'editable' => $mfield_value->editable
-                    ]);
+                    ));
                 }
             }
         }

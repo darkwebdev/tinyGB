@@ -22,7 +22,7 @@
         }
 
         static public function get_active() {
-            return self::get_all(['is_active' => true]);
+            return self::get_all(array('is_active' => true));
         }
 
         protected function on_apply_data($data, $add_context) {
