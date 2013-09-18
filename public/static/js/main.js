@@ -4,7 +4,7 @@
     /* Controller */
 
     var control = function(settings) {
-        console.log('-> ajax', settings);
+        //console.log('-> ajax', settings);
 
         msg.show('Loading data...');
 
@@ -13,7 +13,7 @@
             settings.method || 'GET',
             function(data) {
                 if (data.result && data.redirect) {
-                    console.log('-> redirect', data.redirect);
+                    //console.log('-> redirect', data.redirect);
                     document.location.href = data.redirect;
                 } else {
                     if (settings.title) data.title = settings.title;
@@ -59,7 +59,7 @@
     };
 
     var renderTo = function(data, tplFile) {
-        console.log('-> render', data, tplFile);
+        //console.log('-> render', data, tplFile);
 
         if (data.title) {
             document.title = data.title;
@@ -85,7 +85,7 @@
                         data: serialize(this)
                     });
 
-                    console.log('-> onsumbit', this);
+                    //console.log('-> onsumbit', this);
                 };
             }
         }
@@ -192,7 +192,7 @@
             }
 
             req.send(this.postBody);
-            console.log('-> ajax sending', url, method, this.postBody);
+            //console.log('-> ajax sending', url, method, this.postBody);
         }
     };
 
@@ -278,7 +278,7 @@
         },
 
         '': function() {
-            console.log('-> default');
+            //console.log('-> default');
             control({
                 url: './?action=entries',
                 tplFile: 'entryList.nj.html'

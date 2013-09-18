@@ -41,7 +41,7 @@
         public function __get($prop) {
             $value = null;
             if (property_exists($this, $prop)) {
-//                ChromePhp::log('<- model prop', $this, $prop, $this->prop);
+//                //ChromePhp::log('<- model prop', $this, $prop, $this->prop);
                 $value = $this->$prop->value;
             }
             return $value;
@@ -102,11 +102,11 @@
         }
 
         public function save() {
-            ChromePhp::log('<- model-save');
+            //ChromePhp::log('<- model-save');
             $query = new Query(get_called_class());
             $id = $query->save($this->id, get_object_vars($this));
             if ($id) $this->set_id($id);
-            ChromePhp::log('<- DB last id', $id);
+            //ChromePhp::log('<- DB last id', $id);
             return $id;
         }
 

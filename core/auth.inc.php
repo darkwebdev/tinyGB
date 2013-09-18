@@ -10,7 +10,7 @@
 
         public function __construct($data=array()) {
             parent::__construct();
-            ChromePhp::log('<- user construct', $data);
+            //ChromePhp::log('<- user construct', $data);
 
             $this->name->editable = false;
 

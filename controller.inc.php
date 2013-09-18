@@ -16,7 +16,7 @@
         }
 
         public function object_edit($class_name, $id=null, $add_context=array()) {
-            ChromePhp::log('<- object edit', $class_name, $id);
+            //ChromePhp::log('<- object edit', $class_name, $id);
 
             if (!$this->request->user) {
                 $this->http401();
@@ -43,7 +43,7 @@
             $form = new ObjectForm($object);
 
             if ($this->request->method == 'POST') {
-                ChromePhp::log('<- got post', $this->request->post);
+                //ChromePhp::log('<- got post', $this->request->post);
 
                 $errors = $form->validate($this->request->post);
                 if (count($errors)) {
@@ -69,8 +69,8 @@
         }
 
         public function object_delete($class_name, $id) {
-            ChromePhp::log('<- controller-delete: '. $id);
-            ChromePhp::log('<- user', $this->request->is_user_admin(), $this->request->query->get('id'));
+            //ChromePhp::log('<- controller-delete: '. $id);
+            //ChromePhp::log('<- user', $this->request->is_user_admin(), $this->request->query->get('id'));
             if (!$this->request->is_user_admin() || !$id) {
                 $this->http401();
 

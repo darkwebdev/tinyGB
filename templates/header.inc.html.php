@@ -4,10 +4,10 @@
         <title>Tiny GuestBook</title>
 <!--        <script src="/static/js/jquery-2.0.3.min.js"></script>-->
         <script src="/static/js/routie.min.js"></script>
-        <script src="/static/js/nunjucks.js"></script>
+        <script src="/static/js/nunjucks-min.js"></script>
         <script src="/static/js/templates.min.js"></script>
-        <script src="/static/js/main.js"></script>
-        <link rel="stylesheet" href="/static/css/main.css">
+        <script src="/static/js/main.min.js"></script>
+        <link rel="stylesheet" href="/static/css/main.min.css">
     </head>
     <body>
 

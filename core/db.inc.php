@@ -13,28 +13,28 @@
         }
 
         private function execute() {
-            ChromePhp::log('<- SQL: '. $this->query_text);
+            //ChromePhp::log('<- SQL: '. $this->query_text);
             try {
                 $dbh = new PDO('mysql:host='. Config::DB_HOST .';dbname='. Config::DB_NAME, Config::DB_USER, Config::DB_PASS, array(PDO::ATTR_PERSISTENT => false));
                 $stmt = $dbh->prepare($this->query_text);
                 $result = $stmt->execute();
-//                ChromePhp::log('db exec result: '. $stmt->errorInfo()[2]);
+//                //ChromePhp::log('db exec result: '. $stmt->errorInfo()[2]);
                 if (!$result) return false;
 
                 $this->last_id = $dbh->lastInsertId('id');
                 $this->data = $stmt->fetchAll();
-                ChromePhp::log('<- db data:', $this->data);
+                //ChromePhp::log('<- db data:', $this->data);
                 if ($this->data === null) return false;
             } catch (PDOException $e) {
-                ChromePhp::log("<- Error!: " . $e->getMessage());
+                //ChromePhp::log("<- Error!: " . $e->getMessage());
                 return false;
             }
-//            ChromePhp::log('db returned success');
+//            //ChromePhp::log('db returned success');
             return true;
         }
 
         public function get_all($filter_data) {
-            ChromePhp::log('<- filter', $filter_data);
+            //ChromePhp::log('<- filter', $filter_data);
             $filter_query = '';
             if (count($filter_data)) {
                 $filter_query = ' WHERE ';
@@ -42,7 +42,7 @@
                 foreach($filter_data as $field => $value) {
                     $filter_list[] = $field .'='. $value;
                 }
-                ChromePhp::log('<- filter', $filter_list);
+                //ChromePhp::log('<- filter', $filter_list);
                 $filter_query .= join(', ', $filter_list);
             }
             $this->query_text = 'SELECT * FROM '. $this->table . $filter_query;
@@ -63,7 +63,7 @@
         }
 
         public function save($id, $data) {
-            ChromePhp::log('<- db-save');
+            //ChromePhp::log('<- db-save');
             //insert into table (id, name, age) values(1, "A", 19) on duplicate key update name=values(name), age=values(age)
             foreach ($data as $field => $value) {
                 $fields[] = $field;
