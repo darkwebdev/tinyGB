@@ -56,6 +56,10 @@
             return $this;
         }
 
+        protected function set_id($id) {
+            $this->id->value = $id;
+        }
+
         static function get_all($filter=array()) {
             $query = new Query(get_called_class());
             $data = $query->get_all($filter);
@@ -101,7 +105,7 @@
             ChromePhp::log('<- model-save');
             $query = new Query(get_called_class());
             $id = $query->save($this->id, get_object_vars($this));
-            if ($id) $this->id = $id;
+            if ($id) $this->set_id($id);
             ChromePhp::log('<- DB last id', $id);
             return $id;
         }
