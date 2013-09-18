@@ -4,7 +4,7 @@
     /* Controller */
 
     var control = function(settings) {
-        console.log('send', settings);
+        console.log('-> ajax', settings);
 
         msg.show('Loading data...');
 
@@ -12,9 +12,9 @@
             settings.url,
             settings.method || 'GET',
             function(data) {
-                if (data.result && data.redirect && settings.redirect) {
-                    console.log('----->client redirect', settings.redirect);
-                    document.location.href = settings.redirect;
+                if (data.result && data.redirect) {
+                    console.log('-> redirect', data.redirect);
+                    document.location.href = data.redirect;
                 } else {
                     if (settings.title) data.title = settings.title;
                     renderTo(data, settings.tplFile);
@@ -38,24 +38,20 @@
         hide: function() {
             var cont = this.getCont();
             setTimeout(function() {
-                cont.innerHTML = '';
+                setHtml(cont, '');
             }, 1000);
         },
         show: function(msg, result) {
-            console.log('msg', this );
             if (msg) {
-                var cont = this.getCont();
-                if (cont) {
-                    var alertClass = '';
-                    if (result) {
-                        alertClass = 'alert-success';
-                    } else if (result === false) {
-                        alertClass = 'alert-error';
-                    } else {
-                        alertClass = 'alert-info';
-                    }
-                    cont.innerHTML = '<span class="alert ' + alertClass + '">' + msg + '</span>';
+                var alertClass = '';
+                if (result) {
+                    alertClass = 'alert-success';
+                } else if (result === false) {
+                    alertClass = 'alert-error';
+                } else {
+                    alertClass = 'alert-info';
                 }
+                setHtml(this.getCont(), '<span class="alert ' + alertClass + '">' + msg + '</span>');
             } else {
                 this.hide();
             }
@@ -63,31 +59,33 @@
     };
 
     var renderTo = function(data, tplFile) {
-        console.log('client render', data, tplFile);
+        console.log('-> render', data, tplFile);
 
         if (data.title) {
             document.title = data.title;
-            document.querySelector('.subheader').innerHTML = data.title;
+            setHtml('.subheader', data.title);
         }
 
         msg.show(data.msg, data.result);
 
         if (tplFile) {
-            var html = njEnv.render(tplFile, data),
-                main = document.querySelector('main');
-            main.innerHTML = html;
+            var html = njEnv.render(tplFile, data);
+
+            setHtml('main', html);
 
             var form = document.querySelector('main form');
             if (form) {
                 form.onsubmit = function(e) {
                     e.preventDefault();
+
                     control({
                         url: this.action,
                         method: this.method,
                         tplFile: tplFile,
                         data: serialize(this)
                     });
-                    console.log('onsumbit', this);
+
+                    console.log('-> onsumbit', this);
                 };
             }
         }
@@ -187,17 +185,34 @@
             var req = this.request;
             req.onreadystatechange = this.bindFunction(this.stateChange, this);
 
-            if (method == "POST") {
-                req.open("POST", url, true);
-                req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    //            req.setRequestHeader('Connection', 'close');
-            } else {
-                req.open("GET", url, true);
-            }
+            req.open(method, url, false);
             req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            if (method == "POST") {
+                req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            }
 
             req.send(this.postBody);
+            console.log('-> ajax sending', url, method, this.postBody);
         }
+    };
+
+    function setHtml(selectorOrElement, html) {
+
+        if (typeof(selectorOrElement) == 'string') {
+            var setHtmlNow = function() {
+                    var element = document.querySelector(selectorOrElement);
+                    if (element) element.innerHTML = html;
+                    return element;
+                },
+                element = setHtmlNow();
+            if (!element) setTimeout(setHtmlNow, 0);
+
+            return element;
+        }
+
+        if (selectorOrElement) selectorOrElement.innerHTML = html;
+
+        return selectorOrElement;
     };
 
 
@@ -208,29 +223,25 @@
         'login': function() {
             control({
                 url: './?action=user_login',
-                tplFile: 'login.nj.html',
-                redirect: '/'
+                tplFile: 'login.nj.html'
             });
         },
         'logout': function() {
             control({
                 url: './?action=user_logout',
-                method: 'POST',
-                redirect: '/'
+                method: 'POST'
             });
         },
         'reg': function() {
             control({
                 url: './?action=user_new',
-                tplFile: 'userCreate.nj.html',
-                redirect: '/'
+                tplFile: 'userCreate.nj.html'
             });
         },
         'user/:id': function(id) {
             control({
                 url: './?action=user_edit&id='+parseInt(id),
-                tplFile: 'edit.nj.html',
-                redirect: '#'
+                tplFile: 'edit.nj.html'
             });
         },
 
@@ -238,24 +249,21 @@
             control({
                 url: './?action=entry_new',
                 tplFile: 'edit.nj.html',
-                title: 'New message',
-                redirect: '#'
+                title: 'New message'
             });
         },
 
         'msg/:id': function(id) {
             control({
                 url: './?action=entry_edit&id='+parseInt(id),
-                tplFile: 'edit.nj.html',
-                redirect: '#'
+                tplFile: 'edit.nj.html'
             });
         },
 
         'msg/:id/ok': function(id) {
             control({
                 url: './?action=entry_approve&id='+parseInt(id),
-                method: 'POST',
-                redirect: '#'
+                method: 'POST'
             });
         },
 
@@ -263,15 +271,14 @@
             //if (confirm('Do you really want to delete this message?')) {
                 control({
                     url: './?action=entry_delete&id='+parseInt(id),
-                    method: 'POST',
-                    redirect: '#'
+                    method: 'POST'
                 });
 //                routie('');
             //}
         },
 
         '': function() {
-            console.log('default');
+            console.log('-> default');
             control({
                 url: './?action=entries',
                 tplFile: 'entryList.nj.html'

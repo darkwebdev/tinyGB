@@ -16,7 +16,7 @@
         }
 
         public function user_create($user_name, $pass, $pass_confirm) {
-            ChromePhp::log('user create', $user_name, $pass, $pass_confirm);
+            ChromePhp::log('<- user create', $user_name, $pass, $pass_confirm);
             $this->context = array(
                 'result' => false,
                 'title' => 'Register'
@@ -38,11 +38,12 @@
                     'name' => $user_name,
                     'pass' => $pass
                 ));
-                ChromePhp::log($user);
+                ChromePhp::log('<- user new', $user);
                 if ($user->save()) {
                     $this->request->user = $user;
                     $this->set_user($user->id);
                     $this->context['result'] = true;
+                    $this->context['redirect'] = '/';
                     $this->context['msg'] = 'User '. $user->name .' created';
                 }
             } else {
@@ -52,7 +53,7 @@
         }
 
         public function user_login($user_name, $pass) {
-            ChromePhp::log('user login', $user_name, $pass, $this->request->post);
+            ChromePhp::log('<- user login', $user_name, $pass, $this->request->post);
 
             $this->context = array(
                 'result' => false,
@@ -72,23 +73,24 @@
 
             $user = User::auth($user_name, $pass);
             if ($user) {
-                ChromePhp::log('user', $user);
+                ChromePhp::log('<- user auth ok', $user);
                 $this->request->user = $user;
                 $this->set_user($user->id);
                 $this->context['result'] = true;
-                $this->context['redirect'] = true;
+                $this->context['redirect'] = '/';
             }
         }
 
         public function user_logout() {
             $this->set_user(null);
             $this->context = array(
-                'redirect' => true
+                'result' => true,
+                'redirect' => '/'
             );
         }
 
         public function object_edit($class_name, $id=null, $add_context=array()) {
-            ChromePhp::log('object edit', $class_name, $id);
+            ChromePhp::log('<- object edit', $class_name, $id);
 
             if (!$this->request->user) {
                 $this->http401();
@@ -113,7 +115,7 @@
             $form = new ObjectForm($object);
 
             if ($this->request->method == 'POST') {
-                ChromePhp::log('server got post', $this->request->post);
+                ChromePhp::log('<- got post', $this->request->post);
 
                 $errors = $form->validate($this->request->post);
                 if (count($errors)) {
@@ -125,7 +127,7 @@
                 $object->apply_data($this->request->post, $add_context);
                 $object->save();
                 $this->context['result'] = true;
-                $this->context['redirect'] = true;
+                $this->context['redirect'] = '#';
 
             } else {
 
@@ -136,8 +138,8 @@
         }
 
         public function object_delete($class_name, $id) {
-            ChromePhp::log('controller->delete: '. $id);
-            ChromePhp::log('server user', $this->request->is_user_admin(), $this->request->query->get('id'));
+            ChromePhp::log('<- controller-delete: '. $id);
+            ChromePhp::log('<- user', $this->request->is_user_admin(), $this->request->query->get('id'));
             if (!$this->request->is_user_admin() || !$id) {
                 $this->http401();
                 return;
@@ -160,7 +162,7 @@
             $this->context = array(
                 'result' => true,
                 'msg' => $class_name .' deleted',
-                'redirect' => true
+                'redirect' => '#'
             );
 
         }
@@ -187,7 +189,7 @@
 
             $this->context = array(
                 'result' => true,
-                'redirect' => true
+                'redirect' => '#'
             );
         }
 
@@ -210,9 +212,9 @@
                 $user_list = User::get_all();
 
                 $this->context = array(
-                    'title' => 'User listing',
-                    'user_list' => $user_list,
-                    'template' => 'user_list'
+                    'result' => true,
+                    'title' => 'Users',
+                    'user_list' => $user_list
                 );
             }
         }

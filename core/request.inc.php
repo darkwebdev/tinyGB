@@ -12,17 +12,18 @@
         public $is_ajax;
         public $method;
         public $session;
+        public $payload;
 
         function __construct() {
             session_start();
 
             $this->session = new Dict(sanitize(isset($_SESSION) ? $_SESSION : array()));
-            ChromePhp::log('session', $this->session);
+            ChromePhp::log('<- session', $this->session);
             $this->server = new Dict(sanitize($_SERVER));
             $this->get = new Dict(sanitize($_GET));
-            ChromePhp::log('get', $_GET);
+            ChromePhp::log('<- get', $_GET);
             $this->post = new Dict(sanitize($_POST));
-            ChromePhp::log('post', $_POST);
+            ChromePhp::log('<- post', $_POST);
             $this->request = new Dict(sanitize($_REQUEST));
             $this->cookie = new Dict(sanitize($_COOKIE));
 
@@ -30,14 +31,19 @@
             $this->is_ajax = $this->server->get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest';
             parse_str(urldecode($this->server->get('QUERY_STRING')), $array);
             $this->query = new Dict(sanitize($array));
-            ChromePhp::log('server query', $this->query);
-            ChromePhp::log($this->method, $this->is_ajax ? 'AJAX' : '', $this->server->get('QUERY_STRING'), $_POST);
+            ChromePhp::log('<- query', $this->query);
+            ChromePhp::log('<- ', $this->method, $this->is_ajax ? 'AJAX' : '', $this->server->get('QUERY_STRING'), $_POST);
+            parse_str(urldecode(file_get_contents('php://input')), $array);
+            $this->payload = new Dict(sanitize($array));
+            ChromePhp::log('<- payload', $this->payload);
 
             $this->detect_user();
         }
 
         public function get($var) {
-            return $this->request->get($var);
+            $value = $this->request->get($var);
+            if (!$value && $this->method == 'POST') $value = $this->payload->get($var);
+            return $value;
         }
 
         public function detect_user() {

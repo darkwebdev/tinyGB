@@ -97,11 +97,11 @@
         }
 
         public function save() {
-            ChromePhp::log('model->save');
+            ChromePhp::log('<- model-save');
             $query = new Query(get_called_class());
             $id = $query->save($this->id, get_object_vars($this));
             if ($id) $this->id = $id;
-            ChromePhp::log('DB last id', $id);
+            ChromePhp::log('<- DB last id', $id);
             return $id;
         }
 

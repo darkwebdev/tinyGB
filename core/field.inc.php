@@ -128,7 +128,7 @@
 
         public function set_related($object) {
             $this->value = $object->id;
-            ChromePhp::log('server FK', $object, $this->value);
+            ChromePhp::log('<- FK', $object, $this->value);
 
             return $this;
         }
