@@ -56,7 +56,7 @@
         private function parse($string) {
             parse_str($string, $dict);
 
-            return $dict ? $dict : [];
+            return $dict ? $dict : array();
         }
     }
 

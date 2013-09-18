@@ -16,7 +16,7 @@
         function __construct() {
             session_start();
 
-            $this->session = new Dict(sanitize(isset($_SESSION) ? $_SESSION : []));
+            $this->session = new Dict(sanitize(isset($_SESSION) ? $_SESSION : array()));
             ChromePhp::log('session', $this->session);
             $this->server = new Dict(sanitize($_SERVER));
             $this->get = new Dict(sanitize($_GET));
