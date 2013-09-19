@@ -2,7 +2,7 @@
     include_once('view.inc.php');
 
     class Response {
-        protected $context = [];
+        protected $context = array();
         protected $is_ajax;
         protected $default_template = 'home';
 
