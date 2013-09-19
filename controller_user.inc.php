@@ -1,51 +1,52 @@
 <?
-    include_once('core/response.inc.php');
+    include_once('core/controller.inc.php');
     include_once('mymodels.inc.php');
     include_once('myforms.inc.php');
 
-    class UserResponse extends Response {
+    class UserController extends Controller {
 
-        public function common_context() {
-            parent::common_context();
+        public function get_common_context() {
+            $context = parent::get_common_context();
 
             if ($this->request->is_user_admin()) {
-    //                $user_list = User::get_all();
-    //                $this->context['user_list'] = $user_list;
+//                $user_list = User::get_all();
+//                $context['user_list'] = $user_list;
             }
 
+            return $context;
         }
 
         public function create($user_name, $pass, $pass_confirm) {
             ChromePhp::log('<- user create', $user_name, $pass, $pass_confirm);
-            $this->context = array(
+            $context = array(
                 'result' => false,
                 'title' => 'Register'
             );
 
             if ($this->request->method != 'POST') {
-                $this->context['result'] = true;
+                $context['result'] = true;
 
-                return $this;
+                return $this->response($context);
             }
 
             // @todo: move all validation to the form class
             if (!$user_name || !$pass || !$pass_confirm) {
-                $this->context['msg'] = 'There are errors in the form';
-                $this->context['user_name'] = $user_name;
+                $context['msg'] = 'There are errors in the form';
+                $context['user_name'] = $user_name;
 
-                return $this;
+                return $this->response($context);
             }
             $user_exists = User::get_by('name', $user_name);
             if ($user_exists) {
                 ChromePhp::log('<- user exists', $user_exists);
-                $this->context['msg'] = 'User '. $user_name .' already exists';
+                $context['msg'] = 'User '. $user_name .' already exists';
 
-                return $this;
+                return $this->response($context);
             }
             if ($pass != $pass_confirm) {
-                $this->context['msg'] = 'Passwords are different';
+                $context['msg'] = 'Passwords are different';
 
-                return $this;
+                return $this->response($context);
             }
 
             $user = new User(array(
@@ -56,34 +57,33 @@
             if ($user->save()) {
                 $this->request->user = $user;
                 $this->set_user($user->id);
-                $this->context['result'] = true;
-                $this->context['redirect'] = '/';
-                $this->context['msg'] = 'User '. $user->name .' created';
+                $context['result'] = true;
+                $context['redirect'] = '/';
+                $context['msg'] = 'User '. $user->name .' created';
             }
 
-            return $this;
-
+            return $this->response($context);
         }
 
         public function login($user_name, $pass) {
             ChromePhp::log('<- user login', $user_name, $pass, $this->request->post);
 
-            $this->context = array(
+            $context = array(
                 'result' => false,
                 'title' => 'Login'
             );
 
             if ($this->request->method != 'POST') {
-                $this->context['result'] = true;
+                $context['result'] = true;
 
-                return $this;
+                return $this->response($context);
             }
 
             if (!$user_name || !$pass) {
-                $this->context['msg'] = 'There are errors in the form';
-                $this->context['user_name'] = $user_name;
+                $context['msg'] = 'There are errors in the form';
+                $context['user_name'] = $user_name;
 
-                return $this;
+                return $this->response($context);
             }
 
             $user = User::auth($user_name, $pass);
@@ -91,35 +91,34 @@
                 ChromePhp::log('<- user auth ok', $user);
                 $this->request->user = $user;
                 $this->set_user($user->id);
-                $this->context['result'] = true;
-                $this->context['redirect'] = '/';
+                $context['result'] = true;
+                $context['redirect'] = '/';
             }
 
-            return $this;
+            return $this->response($context);
         }
 
         public function logout() {
             $this->set_user(null);
-            $this->context = array(
+
+            return $this->response(array(
                 'result' => true,
                 'redirect' => '/'
-            );
-
-            return $this;
+            ));
         }
 
 /*        public function show_all() {
             if ($this->request->is_user_admin()) {
                 $user_list = User::get_all();
 
-                $this->context = array(
+                $context = array(
                     'result' => true,
                     'title' => 'Users',
                     'user_list' => $user_list
                 );
             }
 
-            return $this;
+            return $this->response($context);
       }*/
 
     }

@@ -213,7 +213,7 @@
         if (selectorOrElement) selectorOrElement.innerHTML = html;
 
         return selectorOrElement;
-    };
+    }
 
 
     /* Router */

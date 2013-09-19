@@ -1,30 +1,24 @@
 <?
-    include_once('core/response.inc.php');
+    include_once('core/controller.inc.php');
     include_once('mymodels.inc.php');
     include_once('myforms.inc.php');
 
-    class GenericResponse extends Response {
-
-        public function common_context() {
-            parent::common_context();
-        }
+    class GenericController extends Controller {
 
         public function home() {
             // generic empty controller for ajax loader
 
-            return $this;
+            return $this->response();
         }
 
         public function object_edit($class_name, $id=null, $add_context=array()) {
             ChromePhp::log('<- object edit', $class_name, $id);
 
             if (!$this->request->user) {
-                $this->http401();
-
-                return $this;
+                return $this->response_http401();
             }
 
-            $this->context = array(
+            $context = array(
                 'result' => false,
                 'title' => $class_name .' '. ($id ? 'editing' : 'creating')
             );
@@ -32,9 +26,9 @@
             if ($id) {
                 $object = $class_name::get($id);
                 if (!$object || !$this->request->is_user_admin) {
-                    $this->http404();
+                    $this->response_http404();
 
-                    return $this;
+                    return $this->response($context);
                 }
             } else {
                 $object = new $class_name();
@@ -47,59 +41,52 @@
 
                 $errors = $form->validate($this->request->post);
                 if (count($errors)) {
-                    $this->context['msg'] = 'There are errors in the form';
-                    $this->context['errors'] = $errors;
+                    $context['msg'] = 'There are errors in the form';
+                    $context['errors'] = $errors;
 
-                    return $this;
+                    return $this->response($context);
                 }
 
                 $object->apply_data($this->request->post, $add_context);
                 $object->save();
-                $this->context['result'] = true;
-                $this->context['redirect'] = '#';
+                $context['result'] = true;
+                $context['redirect'] = '#';
 
             } else {
 
-                $this->context['result'] = true;
-                $this->context['form'] = $form;
-                $this->context['url'] = $this->request->server->get('REQUEST_URI');
+                $context['result'] = true;
+                $context['form'] = $form;
+                $context['url'] = $this->request->server->get('REQUEST_URI');
             }
 
-            return $this;
+            return $this->response($context);
         }
 
         public function object_delete($class_name, $id) {
             ChromePhp::log('<- controller-delete: '. $id);
             ChromePhp::log('<- user', $this->request->is_user_admin(), $this->request->query->get('id'));
             if (!$this->request->is_user_admin() || !$id) {
-                $this->http401();
-
-                return $this;
+                return $this->response_http401();
             }
 
             $object = $class_name::get($id);
             if (!$object) {
-                $this->http404();
-
-                return $this;
+                return $this->response_http404();
             }
 
             $object->is_active = false;
             if (!$object->save()) {
-                $this->context = array(
+                return $this->response(array(
                     'result' => false,
                     'msg' => 'Could not delete '. $class_name
-                );
+                ));
             }
 
-            $this->context = array(
+            return $this->response(array(
                 'result' => true,
                 'msg' => $class_name .' deleted',
                 'redirect' => '#'
-            );
-
-
-            return $this;
+            ));
         }
 
     }
