@@ -6,7 +6,7 @@
         protected $response;
 
         function __construct($request) {
-            ChromePhp::log('<- new controller', $request);
+            //ChromePhp::log('<- new controller', $request);
             $this->request = $request;
             $this->response = new Response($is_ajax=$request->is_ajax);
         }
