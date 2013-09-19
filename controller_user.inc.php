@@ -17,7 +17,7 @@
         }
 
         public function create($user_name, $pass, $pass_confirm) {
-            ChromePhp::log('<- user create', $user_name, $pass, $pass_confirm);
+            //ChromePhp::log('<- user create', $user_name, $pass, $pass_confirm);
             $context = array(
                 'result' => false,
                 'title' => 'Register'
@@ -38,7 +38,7 @@
             }
             $user_exists = User::get_by('name', $user_name);
             if ($user_exists) {
-                ChromePhp::log('<- user exists', $user_exists);
+                //ChromePhp::log('<- user exists', $user_exists);
                 $context['msg'] = 'User '. $user_name .' already exists';
 
                 return $this->response($context);
@@ -53,7 +53,7 @@
                 'name' => $user_name,
                 'pass' => $pass
             ));
-            ChromePhp::log('<- user new', $user);
+            //ChromePhp::log('<- user new', $user);
             if ($user->save()) {
                 $this->request->user = $user;
                 $this->set_user($user->id);
@@ -66,7 +66,7 @@
         }
 
         public function login($user_name, $pass) {
-            ChromePhp::log('<- user login', $user_name, $pass, $this->request->post);
+            //ChromePhp::log('<- user login', $user_name, $pass, $this->request->post);
 
             $context = array(
                 'result' => false,
@@ -88,7 +88,7 @@
 
             $user = User::auth($user_name, $pass);
             if ($user) {
-                ChromePhp::log('<- user auth ok', $user);
+                //ChromePhp::log('<- user auth ok', $user);
                 $this->request->user = $user;
                 $this->set_user($user->id);
                 $context['result'] = true;

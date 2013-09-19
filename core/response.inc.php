@@ -7,7 +7,7 @@
         protected $default_template = 'home';
 
         public function __construct($is_ajax=false) {
-            ChromePhp::log('<- new response', $is_ajax);
+            //ChromePhp::log('<- new response', $is_ajax);
             $this->is_ajax = $is_ajax;
         }
 
@@ -18,10 +18,10 @@
             session_write_close();
 
             if ($this->is_ajax) {
-                ChromePhp::log('<- render AJAX', $this->context);
+                //ChromePhp::log('<- render AJAX', $this->context);
                 print $this->get_json();
             } else {
-                ChromePhp::log('<- render HTML', $this->context);
+                //ChromePhp::log('<- render HTML', $this->context);
                 print $this->get_html();
             }
         }
