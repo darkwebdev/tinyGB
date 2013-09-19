@@ -47,6 +47,16 @@
             return $value;
         }
 
+        public function __get($property) {
+            $value = null;
+            if (property_exists($this, $property)) {
+                $value = $this->$property;
+            } else if (method_exists($this, $property)) {
+                $value = $this->$property();
+            }
+            return $value;
+        }
+
         public function detect_user() {
             $user_id = $this->session->get('user');
             if ($user_id) {
