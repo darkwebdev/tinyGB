@@ -7,13 +7,8 @@
                 <div class="controls">
 
                     {% if field.type == 'textarea' %}
-
-                        <textarea name="{{ field.name }}">
-                            {{ field.value }}
-                        </textarea>
-
+                        <textarea name="{{ field.name }}">{{ field.value }}</textarea>
                     {% else %}
-
                         <input
                             type="{{ field.type }}"
                             name="{{ field.name }}"
@@ -23,7 +18,6 @@
                                 value="{{ field.value }}"
                             {% endif %}
                         >
-
                     {% endif %}
 
                 </div>
