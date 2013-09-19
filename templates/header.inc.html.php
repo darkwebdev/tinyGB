@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
         <title>Tiny GuestBook</title>
-<!--        <script src="/static/js/jquery-2.0.3.min.js"></script>-->
-        <script src="/static/js/routie.min.js"></script>
-        <script src="/static/js/nunjucks-min.js"></script>
-        <script src="/static/js/templates.min.js"></script>
-        <script src="/static/js/main.min.js"></script>
-        <link rel="stylesheet" href="/static/css/main.min.css">
+        <? if ($debug) { ?>
+            <link rel="stylesheet" href="/static/css/main.css">
+        <? } else { ?>
+            <link rel="stylesheet" href="/static/css/app.min.css">
+        <? } ?>
     </head>
     <body>
 

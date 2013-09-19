@@ -14,6 +14,7 @@
         public function get_common_context() {
             $context = array();
             $context['user'] = $this->request->user;
+            $context['debug'] = $this->request->get('debug') ? true : false;
 
             return $context;
         }
