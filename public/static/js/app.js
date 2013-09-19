@@ -98,7 +98,7 @@ output += runtime.suppressValue(runtime.memberLookup((t_3),"name", env.autoesc),
 output += "</strong></div>\n                    <div class=\"time muted\"><em>";
 output += runtime.suppressValue(runtime.memberLookup((t_3),"created", env.autoesc), env.autoesc);
 output += "</em></div>\n                </header>\n\n                <section>\n                    ";
-output += runtime.suppressValue(runtime.memberLookup((t_3),"text", env.autoesc), env.autoesc);
+output += runtime.suppressValue(env.getFilter("replace").call(context, runtime.memberLookup((t_3),"text", env.autoesc),"\n","<br>"), env.autoesc);
 output += "\n                </section>\n\n                ";
 if(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "user")),"is_admin", env.autoesc)) {
 output += "\n                    <footer>\n                        <ul>\n\n                            ";

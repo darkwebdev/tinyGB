@@ -13,7 +13,7 @@
                 </header>
 
                 <section>
-                    {{ entry.text }}
+                    {{ entry.text|replace('\n', '<br>') }}
                 </section>
 
                 {% if user.is_admin %}
