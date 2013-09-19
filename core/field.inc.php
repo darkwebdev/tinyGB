@@ -39,8 +39,10 @@
             switch ($this->type) {
                 case 'StringField':
                 case 'TextField':
-                case 'DateTimeField':
                     return '"'. $this->value .'"';
+                    break;
+                case 'DateTimeField':
+                    return $this->value ? '"'. $this .'"' : 'NOW()';
                     break;
                 case 'PasswordField':
                     return '"'. Auth::get_hash($this->value) .'"';
@@ -98,7 +100,7 @@
     }
 
     class DateTimeField extends StringField {
-        protected $default_value = '01-01-1970';
+        protected $default_value = null;
     }
 
     class NumberField extends Field {
