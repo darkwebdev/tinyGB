@@ -1,61 +1,42 @@
 <?
-    include_once('request.inc.php');
     include_once('view.inc.php');
 
-    abstract class Response {
-        protected $context = array();
-        protected $request;
+    class Response {
+        protected $context = [];
+        protected $is_ajax;
+        protected $default_template = 'home';
 
-        function __construct($request) {
-            $this->request = $request;
+        public function __construct($is_ajax=false) {
+            ChromePhp::log('<- new response', $is_ajax);
+            $this->is_ajax = $is_ajax;
         }
 
-        public function render() {
+        public function expand_context($add_context) {
+            $this->context = array_merge($this->context, $add_context);
+        }
+        public function send() {
             session_write_close();
 
-            $this->common_context();
-
-            if ($this->request->is_ajax) {
-                //ChromePhp::log('<- render AJAX', $this->context);
-                unset($this->context['template']);
-                $show_all = $this->request->is_user_admin();
-                print json_serialize($this->context, $show_all);
-//                print json_encode($this->context);
+            if ($this->is_ajax) {
+                ChromePhp::log('<- render AJAX', $this->context);
+                print $this->get_json();
             } else {
-                //ChromePhp::log('<- render HTML', $this->context);
-                $template = new Template($this->context);
-                $template->prefix = array_key_exists('template', $this->context) ? $this->context['template'] : 'home';
-                print $template->get_html();
+                ChromePhp::log('<- render HTML', $this->context);
+                print $this->get_html();
             }
         }
 
-        public function common_context() {
-            // expand context here
-            $this->context['user'] = $this->request->user;
+        protected function get_html() {
+            $template_prefix = array_key_exists('template', $this->context) ? $this->context['template'] : $this->default_template;
+            unset($this->context['template']);
+            $template = new Template($this->context);
+            $template->prefix = $template_prefix;
+            return $template->get_html();
         }
 
-        public function http404() {
-            $this->context = array(
-                'title' => 'Error 404',
-                'template' => 'http404'
-            );
-        }
-        public function http401() {
-            $this->context = array(
-                'title' => 'Error 401: Unauthorized',
-                'template' => 'http401'
-            );
-        }
-
-        public function set_user($user_id) {
-            if ($user_id) {
-                session_regenerate_id(true);
-                $_SESSION['user'] = $user_id;
-            } else {
-                session_destroy();
-                unset($_SESSION['user']);
-            }
+        protected function get_json() {
+            $show_all = $this->context['user'] ? $this->context['user']->is_admin : false;
+            return json_serialize($this->context, $show_all);
         }
     }
-
 ?>

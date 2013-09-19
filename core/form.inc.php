@@ -77,7 +77,7 @@
                     $this->fields[] = new FormField(array(
                         'name' => $mfield_name,
                         'label' => $mfield_value->name ? $mfield_value->name : ucfirst($mfield_name),
-                        'value' => $mfield_value->value ? $mfield_value->value->to_json_format() : null,
+                        'value' => $mfield_value->value ? $mfield_value->to_json_format() : null,
                         'type' => $this->get_input_type($mfield_value->type),
                         'editable' => $mfield_value->editable
                     ));
